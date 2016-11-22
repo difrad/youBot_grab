@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-import rospy
-from std_msgs.msg import Float32MultiArray, Bool,UInt8MultiArray
+# import rospy
+# from std_msgs.msg import Float32MultiArray, Bool,UInt8MultiArray
 from Tkinter import *
 
 sliderLength = 160 #the physical length of a slider
@@ -15,121 +15,107 @@ frame = Frame(root)
 frame.pack()
 
 #build subframes into the main GUI frame
-frameLeft = Frame(frame)
 frameRight = Frame(frame)
+frameLeft = Frame(frame)
 
-frameTopRight = Frame(frameRight)
-frameBotRight = Frame(frameRight)
-frameTopLeft = Frame(frameLeft)
-frameMidLeft = Frame(frameLeft)
-frameBotLeft = Frame(frameLeft)
-
-#build into all of the frames
-# b0 = Button(frameTopRight, text='top right')
-
-# b2 = Button(frameTopLeft, text='top left')
-# b3 = Button(frameBotLeft, text='bot left')
-# b0.pack(side=TOP)
-# b1.pack(side=TOP)
-# b2.pack(side=TOP)
-# b3.pack(side=TOP)
-
-############## BUILD INTO TOP LEFT FRAME ##############
-#######################################################
-variable = 0
-b0 = Button(frameTopLeft, text='ENABLE BOT')
-b1 = Button(frameTopLeft, text='ZERO BOT') 
-w0 = OptionMenu(frameTopLeft, variable, "one","two","three")
-b0.pack(side=TOP)
-b1.pack(side=TOP)
-w0.pack(side=TOP)
-
-############## BUILD INTO MID LEFT FRAME ##############
-#######################################################
-b2 = Button(frameMidLeft, text="'SCAN'")
-w1 = OptionMenu(frameTopLeft, variable, "one","two","three")
-b2.pack(side=TOP)
-w1.pack(side=TOP)
-
-############## BUILD INTO BOT LEFT FRAME ##############
-#######################################################
-b3 = Button(frameBotLeft, text="EXECUTE")
-b3.pack(side=TOP)
+frameTopLeft = Frame(frameLeft,bd=2,relief=RIDGE)
+frameBotLeft = Frame(frameLeft,bd=2,relief=RIDGE)
+frameTopRight = Frame(frameRight,bd=2,relief=RIDGE)
+frameMidRight = Frame(frameRight,bd=2,relief=RIDGE)
+frameBotRight = Frame(frameRight,bd=2,relief=RIDGE)
 
 ############## BUILD INTO TOP RIGHT FRAME ##############
+#######################################################
+variable = 0
+Label(frameTopRight,text="ROBOT SETUP",font="Helvetica 16 bold").grid(row=0, column=0, sticky=W+E+N+S, padx=5, pady=5)
+b0 = Button(frameTopRight, text='ENABLE BOT',width=32).grid(row=1,column=0)
+b1 = Button(frameTopRight, text='ZERO BOT',width=32) .grid(row=2,column=0)
+w0 = OptionMenu(frameTopRight, variable, "one","two","three").grid(row=3,column=0)
+# b0.pack(side=TOP)
+# b1.pack(side=TOP)
+# w0.pack(side=TOP)
+
+############## BUILD INTO MID RIGHT FRAME ##############
+#######################################################
+Label(frameMidRight, text="QUEUE ACTION",font ="Helvetica 16 bold").grid(row=0,column=0)
+b2 = Button(frameMidRight, text="'SCAN'",width=32).grid(row=1,column=0)
+w1 = OptionMenu(frameMidRight, variable, "one","two","three").grid(row=2,column=0)
+# b2.pack(side=TOP)
+# w1.pack(side=TOP)
+
+############## BUILD INTO BOT RIGHT FRAME ##############
+#######################################################
+b3 = Button(frameBotRight, text="EXECUTE",width=32,font="Helvetica 16 bold").grid(row=0,column=0)
+
+
+############## BUILD INTO TOP LEFT FRAME ##############
 ########################################################
+
+Label(frameTopLeft,text="JOINT CONFIGURATIONS",font="Helvetica 16 bold").grid(row=0, column=0, columnspan=2,rowspan=1,sticky=W+E+N+S, padx=5, pady=5)
 
 #stored variables
 var0 = 3
 var1 = 1
-var2 = 1
-var3 = 1
+var2 = 2
+var3 = 3
 var4 = 5
 var5 = 2
 var6 = 0
 
 #sliders
-scale0 = Scale(frameTopRight, variable = var0, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL)
-scale1 = Scale(frameTopRight, variable = var1, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL)
-scale2 = Scale(frameTopRight, variable = var2, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL)
-scale3 = Scale(frameTopRight, variable = var3, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL)
-scale4 = Scale(frameTopRight, variable = var4, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL)
-scale5 = Scale(frameTopRight, variable = var5, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL)
-scale6 = Scale(frameTopRight, variable = var6, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL)
+scale0 = Scale(frameTopLeft, variable = var0, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=1,column=1)
+scale1 = Scale(frameTopLeft, variable = var1, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=2,column=1)
+scale2 = Scale(frameTopLeft, variable = var2, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=3,column=1)
+scale3 = Scale(frameTopLeft, variable = var3, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=4,column=1)
+scale4 = Scale(frameTopLeft, variable = var4, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=5,column=1)
+scale5 = Scale(frameTopLeft, variable = var5, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=6,column=1)
+scale6 = Scale(frameTopLeft, variable = var6, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=7,column=1)
+
+Label(frameTopLeft,text="m0_base").grid(row=1,column=0)
+Label(frameTopLeft,text="m1").grid(row=2,column=0)
+Label(frameTopLeft,text="m2").grid(row=3,column=0)
+Label(frameTopLeft,text="m3").grid(row=4,column=0)
+Label(frameTopLeft,text="m4").grid(row=5,column=0)
+Label(frameTopLeft,text="m5_grip_l").grid(row=6,column=0)
+Label(frameTopLeft,text="m6_grip_r").grid(row=7,column=0)
 
 
-
-#initial values
-scale0.set(2)
-scale1.set(1)
-scale2.set(2)
-scale3.set(1)
-scale4.set(2)
-scale5.set(1)
-scale6.set(2)
-
-#pack
-scale0.pack(side=TOP)
-scale1.pack(side=TOP)
-scale2.pack(side=TOP)
-scale3.pack(side=TOP)
-scale4.pack(side=TOP)
-scale5.pack(side=TOP)
-scale6.pack(side=TOP)
-
-############## BUILD INTO BOT RIGHT FRAME ##############
+############## BUILD INTO BOT LEFT FRAME ##############
 ########################################################
-e0 = Entry(frameBotRight)
-e1 = Entry(frameBotRight)
-e2 = Entry(frameBotRight)
-e3 = Entry(frameBotRight)
-e4 = Entry(frameBotRight)
-e5 = Entry(frameBotRight)
-e6 = Entry(frameBotRight)
-e7 = Entry(frameBotRight)
-e0.pack(side=TOP)
-e1.pack(side=TOP)
-e2.pack(side=TOP)
-e3.pack(side=TOP)
-e4.pack(side=TOP)
-e5.pack(side=TOP)
-e6.pack(side=TOP)
-e7.pack(side=TOP)
+Label(frameBotLeft,text="END EFFECTOR CONFIGURATION",font="Helvetica 16 bold").grid(row=0, column=0, columnspan=2,rowspan=1,sticky=W+E+N+S, padx=5, pady=5)
+
+e0 = Entry(frameBotLeft).grid(row=1,column=1)
+e1 = Entry(frameBotLeft).grid(row=2,column=1)
+e2 = Entry(frameBotLeft).grid(row=3,column=1)
+e3 = Entry(frameBotLeft).grid(row=4,column=1)
+e4 = Entry(frameBotLeft).grid(row=5,column=1)
+e5 = Entry(frameBotLeft).grid(row=6,column=1)
+e6 = Entry(frameBotLeft).grid(row=7,column=1)
+e7 = Entry(frameBotLeft).grid(row=8,column=1)
+
+Label(frameBotLeft,text="x").grid(row=1,column=0)
+Label(frameBotLeft,text="y").grid(row=2,column=0)
+Label(frameBotLeft,text="z").grid(row=3,column=0)
+Label(frameBotLeft,text="roll").grid(row=4,column=0)
+Label(frameBotLeft,text="pitch").grid(row=5,column=0)
+Label(frameBotLeft,text="yaw").grid(row=6,column=0)
+Label(frameBotLeft,text="grip_l").grid(row=7,column=0)
+Label(frameBotLeft,text="grip_r").grid(row=8,column=0)
 
 #pack all the frames
-frameLeft.pack(side = LEFT)
 frameRight.pack(side = RIGHT)
-frameTopRight.pack(side=TOP)
-frameBotRight.pack(side=TOP)
+frameLeft.pack(side = LEFT)
 frameTopLeft.pack(side=TOP)
-frameMidLeft.pack(side=TOP)
 frameBotLeft.pack(side=TOP)
+frameTopRight.pack(side=TOP)
+frameMidRight.pack(side=TOP)
+frameBotRight.pack(side=TOP)
 
 #create the publishers
-pub = rospy.Publisher('sliderData', Float32MultiArray, queue_size=20)
+# pub = rospy.Publisher('sliderData', Float32MultiArray, queue_size=20)
 # rospy.Subscriber("fail_safe",Bool, lostSignal)
 # rospy.Subscriber("pwm_control", UInt8MultiArray, updatePWM)
-rospy.init_node('tkinterGUI', anonymous=True)
+# rospy.init_node('tkinterGUI', anonymous=True)
 
 #run the loop indefinitely
 root.mainloop()
