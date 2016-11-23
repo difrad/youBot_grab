@@ -1,16 +1,47 @@
 #!/usr/bin/env python
 
+'''
+todo: fix drop downs
+todo: call appropriate functions from gui
+todo: fix shape of windows
+todo: keep log
+'''
+
 # import rospy
 # from std_msgs.msg import Float32MultiArray, Bool,UInt8MultiArray
 from Tkinter import *
 
 sliderLength = 160 #the physical length of a slider
+enable = False #if true, robot commands will be published
 
 def junk(data):
 	pass
 
+def enableToggle():
+	'''enables or disables the robot, for safety.  Defaults to disabled.'''
+	global enable
+
+	if enable:
+		enable = False
+		b0["text"] = "BOT IS DISABLED"
+	else:
+		enable = True
+		b0["text"] = "BOT IS ENABLED"
+
+	enableStatus = 'True'
+
+	print 'bot enable is ',enable
+
+def execute():
+	'''Tries to execute the command to the robot'''
+	if enable:
+		print "execute action"
+	else:
+		print "robot is disabled"
+
 #create the GUI window
 root = Tk()
+root.title("Robot Control Interface")
 frame = Frame(root)
 frame.pack()
 
@@ -28,12 +59,12 @@ frameBotRight = Frame(frameRight,bd=2,relief=RIDGE)
 #######################################################
 variable = 0
 Label(frameTopRight,text="ROBOT SETUP",font="Helvetica 16 bold").grid(row=0, column=0, sticky=W+E+N+S, padx=5, pady=5)
-b0 = Button(frameTopRight, text='ENABLE BOT',width=32).grid(row=1,column=0)
-b1 = Button(frameTopRight, text='ZERO BOT',width=32) .grid(row=2,column=0)
-w0 = OptionMenu(frameTopRight, variable, "one","two","three").grid(row=3,column=0)
-# b0.pack(side=TOP)
-# b1.pack(side=TOP)
-# w0.pack(side=TOP)
+b0 = Button(frameTopRight, text="CLICK TO ENABLE BOT", command = enableToggle, width=32)
+b1 = Button(frameTopRight, text='ZERO BOT',width=32) 
+w0 = OptionMenu(frameTopRight, variable, "one","two","three")
+b0.grid(row=1,column=0)
+b1.grid(row=2,column=0)
+w0.grid(row=3,column=0)
 
 ############## BUILD INTO MID RIGHT FRAME ##############
 #######################################################
@@ -45,7 +76,7 @@ w1 = OptionMenu(frameMidRight, variable, "one","two","three").grid(row=2,column=
 
 ############## BUILD INTO BOT RIGHT FRAME ##############
 #######################################################
-b3 = Button(frameBotRight, text="EXECUTE",width=32,font="Helvetica 16 bold").grid(row=0,column=0)
+b3 = Button(frameBotRight, text="EXECUTE", command = execute, width=32,font="Helvetica 16 bold").grid(row=0,column=0)
 
 
 ############## BUILD INTO TOP LEFT FRAME ##############
@@ -54,13 +85,13 @@ b3 = Button(frameBotRight, text="EXECUTE",width=32,font="Helvetica 16 bold").gri
 Label(frameTopLeft,text="JOINT CONFIGURATIONS",font="Helvetica 16 bold").grid(row=0, column=0, columnspan=2,rowspan=1,sticky=W+E+N+S, padx=5, pady=5)
 
 #stored variables
-var0 = 3
+var0 = 0
 var1 = 1
 var2 = 2
 var3 = 3
-var4 = 5
-var5 = 2
-var6 = 0
+var4 = 4
+var5 = 5
+var6 = 6
 
 #sliders
 scale0 = Scale(frameTopLeft, variable = var0, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=1,column=1)
@@ -84,14 +115,14 @@ Label(frameTopLeft,text="m6_grip_r").grid(row=7,column=0)
 ########################################################
 Label(frameBotLeft,text="END EFFECTOR CONFIGURATION",font="Helvetica 16 bold").grid(row=0, column=0, columnspan=2,rowspan=1,sticky=W+E+N+S, padx=5, pady=5)
 
-e0 = Entry(frameBotLeft).grid(row=1,column=1)
-e1 = Entry(frameBotLeft).grid(row=2,column=1)
-e2 = Entry(frameBotLeft).grid(row=3,column=1)
-e3 = Entry(frameBotLeft).grid(row=4,column=1)
-e4 = Entry(frameBotLeft).grid(row=5,column=1)
-e5 = Entry(frameBotLeft).grid(row=6,column=1)
-e6 = Entry(frameBotLeft).grid(row=7,column=1)
-e7 = Entry(frameBotLeft).grid(row=8,column=1)
+e0 = Entry(frameBotLeft, width=10).grid(row=1,column=1)
+e1 = Entry(frameBotLeft, width=10).grid(row=2,column=1)
+e2 = Entry(frameBotLeft, width=10).grid(row=3,column=1)
+e3 = Entry(frameBotLeft, width=10).grid(row=4,column=1)
+e4 = Entry(frameBotLeft, width=10).grid(row=5,column=1)
+e5 = Entry(frameBotLeft, width=10).grid(row=6,column=1)
+e6 = Entry(frameBotLeft, width=10).grid(row=7,column=1)
+e7 = Entry(frameBotLeft, width=10).grid(row=8,column=1)
 
 Label(frameBotLeft,text="x").grid(row=1,column=0)
 Label(frameBotLeft,text="y").grid(row=2,column=0)
