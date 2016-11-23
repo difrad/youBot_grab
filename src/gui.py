@@ -30,8 +30,6 @@ def enableToggle():
 
 	enableStatus = 'True'
 
-	print 'bot enable is ',enable
-
 def execute():
 	'''Tries to execute the command to the robot'''
 	if enable:
@@ -48,12 +46,18 @@ frame.pack()
 #build subframes into the main GUI frame
 frameRight = Frame(frame)
 frameLeft = Frame(frame)
-
 frameTopLeft = Frame(frameLeft,bd=2,relief=RIDGE)
-frameBotLeft = Frame(frameLeft,bd=2,relief=RIDGE)
+frameBotLeft = Frame(frameLeft,bd=2,relief=RIDGE,width=800)
 frameTopRight = Frame(frameRight,bd=2,relief=RIDGE)
 frameMidRight = Frame(frameRight,bd=2,relief=RIDGE)
 frameBotRight = Frame(frameRight,bd=2,relief=RIDGE)
+frameLeft.grid(row=0,column=0)
+frameRight.grid(row=0,column=1)
+frameTopLeft.grid(row=0,column=0)
+frameBotLeft.grid(row=1,column=0)
+frameTopRight.grid(row=0,column=0)
+frameMidRight.grid(row=1,column=0)
+frameBotRight.grid(row=2,column=0)
 
 ############## BUILD INTO TOP RIGHT FRAME ##############
 #######################################################
@@ -71,8 +75,6 @@ w0.grid(row=3,column=0)
 Label(frameMidRight, text="QUEUE ACTION",font ="Helvetica 16 bold").grid(row=0,column=0)
 b2 = Button(frameMidRight, text="'SCAN'",width=32).grid(row=1,column=0)
 w1 = OptionMenu(frameMidRight, variable, "one","two","three").grid(row=2,column=0)
-# b2.pack(side=TOP)
-# w1.pack(side=TOP)
 
 ############## BUILD INTO BOT RIGHT FRAME ##############
 #######################################################
@@ -132,15 +134,6 @@ Label(frameBotLeft,text="pitch").grid(row=5,column=0)
 Label(frameBotLeft,text="yaw").grid(row=6,column=0)
 Label(frameBotLeft,text="grip_l").grid(row=7,column=0)
 Label(frameBotLeft,text="grip_r").grid(row=8,column=0)
-
-#pack all the frames
-frameRight.pack(side = RIGHT)
-frameLeft.pack(side = LEFT)
-frameTopLeft.pack(side=TOP)
-frameBotLeft.pack(side=TOP)
-frameTopRight.pack(side=TOP)
-frameMidRight.pack(side=TOP)
-frameBotRight.pack(side=TOP)
 
 #create the publishers
 # pub = rospy.Publisher('sliderData', Float32MultiArray, queue_size=20)
