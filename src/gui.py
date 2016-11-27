@@ -8,8 +8,8 @@ todo: keep log
 todo: plan into this smooth path planning
 '''
 
-# import rospy
-# from std_msgs.msg import Float32MultiArray, Bool,UInt8MultiArray
+import rospy
+from std_msgs.msg import Float32MultiArray, Bool,UInt8MultiArray
 from Tkinter import *
 
 sliderLength = 160 #the physical length of a slider
@@ -53,6 +53,18 @@ def enableScan():
 
 	# enableScanStatus = 'True'	
 
+def moveArm():
+	'''publishes arm data'''
+	a = Float32MultiArray()
+	# a.data.append(32.00)
+	a.data.append(float(var0.get()))
+	a.data.append(float(var1.get()))
+	a.data.append(float(var2.get()))
+	a.data.append(float(var3.get()))
+	a.data.append(float(var4.get()))
+	# rospy.loginfo(a)
+	armPublisher.publish(a)
+
 def execute():
 	'''Tries to execute the command to the robot'''
 	if enableBot:
@@ -72,7 +84,8 @@ def execute():
 		
 		#decide on how to handle the request
 		if v0.get() == "forward kinematics":
-			print "Doing forward.  Joint angles are: ",var0.get(),var1.get(),var2.get(),var3.get(),var4.get(),var5.get()
+			# print "Doing forward.  Joint angles are: ",var0.get(),var1.get(),var2.get(),var3.get(),var4.get(),var5.get()
+			moveArm()
 		# elif v0.get() == "zero":
 		# 	print "Zeroing bot..."
 		elif v0.get() == "predefined task":
@@ -198,10 +211,10 @@ Label(frameBotLeft,text="grip_l").grid(row=7,column=0)
 Label(frameBotLeft,text="grip_r").grid(row=8,column=0)
 
 #create the publishers
-# pub = rospy.Publisher('sliderData', Float32MultiArray, queue_size=20)
+armPublisher = rospy.Publisher('moveArm', Float32MultiArray, queue_size=20)
 # rospy.Subscriber("fail_safe",Bool, lostSignal)
 # rospy.Subscriber("pwm_control", UInt8MultiArray, updatePWM)
-# rospy.init_node('tkinterGUI', anonymous=True)
+rospy.init_node('gui', anonymous=True)
 
 #run the loop indefinitely
 root.mainloop()
