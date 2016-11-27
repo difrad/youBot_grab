@@ -11,6 +11,7 @@ todo: plan into this smooth path planning
 import rospy
 from std_msgs.msg import Float32MultiArray, Bool,UInt8MultiArray
 from Tkinter import *
+import random
 
 sliderLength = 160 #the physical length of a slider
 enableBot = False #if true, robot commands will be published
@@ -34,6 +35,16 @@ gripper = {
 	'open':[1,1],
 	'close':[0,0]
 }
+
+#possible configurations that make the robot look like it's 'scanning'.  Can append more
+scanConfigurations = [
+[1,2,3,4,1],
+[3,2,1,3,3],
+[1,2,3,4,5],
+[1,2,3,4,5],
+[1,2,3,4,5],
+[1,2,3,4,5],
+[1,2,3,4,5]]
 
 def junk(data):
 	pass
@@ -172,11 +183,17 @@ def grabBlock():
 
 def scan():
 	'''pretends to scan the structure with a 3D camera by moving to a few random configurations.'''
-	#generate random configurations (within selected thresholds)
-	#moveTo(conf1)
-	#delay()
-	#rinse and repeat
-	pass
+
+	size = len(scanConfigurations)
+	vals = random.sample(xrange(0,size), 2)
+
+	for i in range(len(vals)):
+		rospy.loginfo(rospy.get_caller_id() + "scan data: %s", vals[i])
+		moveArm(scanConfigurations[i])
+		rospy.sleep(2)
+
+	safeHome(configurations['safe'])
+	rospy.sleep(2)
 
 def execute():
 	'''Tries to execute the command to the robot'''
@@ -192,27 +209,15 @@ def execute():
 				zeroBot()
 			elif v1.get() == 'dropRight':
 				if b2['text'] == 'SCAN ENABLED':
-					# print 'doing scan'
 					scan()
-				# else:
-					# print 'not doing scan'
-				# print 'dropRight'
 				dropRight()
 			elif v1.get() == 'dropLeft':
 				if b2['text'] == 'SCAN ENABLED':
-					# print 'doing scan'
 					scan()
-				# else:
-					# print 'not doing scan'
-				# print 'dropLeft'
 				dropLeft()
 			elif v1.get() == 'dropMiddle':
 				if b2['text'] == 'SCAN ENABLED':
-					# print 'doing scan'
 					scan()
-				# else:
-					# print 'not doing scan'
-				# print 'dropMiddle'
 				dropMiddle()
 			elif v1.get() == 'grabBlock':
 				grabBlock()
