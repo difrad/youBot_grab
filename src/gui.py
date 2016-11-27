@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 '''
-todo: fix drop downs
-todo: call appropriate functions from gui
+todo: fix drop todo
+downs: call appropriate functions from gui
 todo: fix shape of windows
 todo: keep log
+todo: plan into this smooth path planning
 '''
 
 # import rospy
@@ -12,30 +13,84 @@ todo: keep log
 from Tkinter import *
 
 sliderLength = 160 #the physical length of a slider
-enable = False #if true, robot commands will be published
+enableBot = False #if true, robot commands will be published
+enableScan = False #if true, robot scan will be run on predefined actions
+widthRight = 24  #width of the right frame
+widthLeft = 32  #width of the left frame
+taskOptions = ["dropRight","dropLeft","dropMiddle","grabBlock", "zeroBot"]
 
 def junk(data):
+	# print var0.get(),var1.get()
+	pass
+
+def zeroBot():
+	'''tries to zero the robot'''
 	pass
 
 def enableToggle():
 	'''enables or disables the robot, for safety.  Defaults to disabled.'''
-	global enable
+	global enableBot
 
-	if enable:
-		enable = False
+	if enableBot:
+		enableBot = False
 		b0["text"] = "BOT IS DISABLED"
 	else:
-		enable = True
+		enableBot = True
 		b0["text"] = "BOT IS ENABLED"
 
-	enableStatus = 'True'
+	# enableStatus = 'True'
+
+def enableScan():
+	'''enables or disables the pretend scan function.  Defaults to disabled.'''
+	global enableScan
+
+	if enableScan:
+		enableScan = False
+		b2["text"] = "SCAN DISABLED"
+	else:
+		enableScan = True
+		b2["text"] = "SCAN ENABLED"
+
+	# enableScanStatus = 'True'	
 
 def execute():
 	'''Tries to execute the command to the robot'''
-	if enable:
-		print "execute action"
+	if enableBot:
+		print "Executing action..."
+		'''
+		if FK:
+			if action is None:
+				pull slider data and move
+			else:
+				ignore slider information, move, and update sliders
+		elif IK:
+			if action is None:
+				pull end effector data and try to move
+			else:
+				set end effector data to predefined locations/trajectories
+				'''
+		
+		#decide on how to handle the request
+		if v0.get() == "forward kinematics":
+			print "Doing forward.  Joint angles are: ",var0.get(),var1.get(),var2.get(),var3.get(),var4.get(),var5.get()
+		# elif v0.get() == "zero":
+		# 	print "Zeroing bot..."
+		elif v0.get() == "predefined task":
+			#try to read the action
+			if v1.get() == 'zeroBot':
+				print 'zeroBot'
+			elif v1.get() == 'dropRight':
+				if b2['text'] == 'SCAN ENABLED':
+					print 'doing scan'
+				else:
+					print 'not doing scan'
+				print 'dropRight'
+			else:
+				print 'not yet enabled'
+		else:
+			print "Solver not enabled yet.  Please make a different selection."
 	else:
-		print "robot is disabled"
+		print "Please enable the robot first."
 
 #create the GUI window
 root = Tk()
@@ -47,7 +102,7 @@ frame.pack()
 frameRight = Frame(frame)
 frameLeft = Frame(frame)
 frameTopLeft = Frame(frameLeft,bd=2,relief=RIDGE)
-frameBotLeft = Frame(frameLeft,bd=2,relief=RIDGE,width=800)
+frameBotLeft = Frame(frameLeft,bd=2,relief=RIDGE)
 frameTopRight = Frame(frameRight,bd=2,relief=RIDGE)
 frameMidRight = Frame(frameRight,bd=2,relief=RIDGE)
 frameBotRight = Frame(frameRight,bd=2,relief=RIDGE)
@@ -61,39 +116,46 @@ frameBotRight.grid(row=2,column=0)
 
 ############## BUILD INTO TOP RIGHT FRAME ##############
 #######################################################
-variable = 0
-Label(frameTopRight,text="ROBOT SETUP",font="Helvetica 16 bold").grid(row=0, column=0, sticky=W+E+N+S, padx=5, pady=5)
-b0 = Button(frameTopRight, text="CLICK TO ENABLE BOT", command = enableToggle, width=32)
-b1 = Button(frameTopRight, text='ZERO BOT',width=32) 
-w0 = OptionMenu(frameTopRight, variable, "one","two","three")
-b0.grid(row=1,column=0)
-b1.grid(row=2,column=0)
-w0.grid(row=3,column=0)
+v0 = StringVar(frameTopRight)
+v0.set("Select Solver") # default value
+Label(frameTopRight,text="BOT SETUP",font="Helvetica 16 bold").grid(row=0, column=0, sticky=W+E+N+S, columnspan=2,rowspan=1)
+Label(frameTopRight,text="Solver:").grid(row=3, column=0, sticky=W+E+N+S)
+b0 = Button(frameTopRight, text="CLICK TO ENABLE BOT", command = enableToggle, width=widthRight)
+# b1 = Button(frameTopRight, text='ZERO BOT', command=zeroBot, width=widthRight) 
+Label(frameTopRight, text="Solver: ").grid(row=4,column=0)
+w0 = OptionMenu(frameTopRight, v0, "forward kinematics","inverse kinematics","predefined task")
+b0.grid(row=1,column=0, columnspan=2,rowspan=1)
+# b1.grid(row=2,column=0, columnspan=2,rowspan=1)
+w0.grid(row=4,column=1)
 
 ############## BUILD INTO MID RIGHT FRAME ##############
 #######################################################
-Label(frameMidRight, text="QUEUE ACTION",font ="Helvetica 16 bold").grid(row=0,column=0)
-b2 = Button(frameMidRight, text="'SCAN'",width=32).grid(row=1,column=0)
-w1 = OptionMenu(frameMidRight, variable, "one","two","three").grid(row=2,column=0)
+v1 = StringVar(frameTopRight)
+v1.set("zeroBot") # default value
+# Label(frameMidRight, text="QUEUE ACTION",font ="Helvetica 16 bold").grid(row=0,column=0, columnspan=2,rowspan=1)
+b2 = Button(frameTopRight, text="SCAN DISABLED", command=enableScan,width=widthRight)
+b2.grid(row=3,column=0, columnspan=2,rowspan=1)
+Label(frameTopRight, text="Predefined task: ").grid(row=5,column=0)
+w1 = OptionMenu(frameTopRight, v1, taskOptions[0],taskOptions[1],taskOptions[2],taskOptions[3],taskOptions[4]).grid(row=5,column=1)
 
 ############## BUILD INTO BOT RIGHT FRAME ##############
 #######################################################
-b3 = Button(frameBotRight, text="EXECUTE", command = execute, width=32,font="Helvetica 16 bold").grid(row=0,column=0)
+b3 = Button(frameTopRight, text="EXECUTE", command = execute, width=widthRight/2,font="Helvetica 16 bold").grid(row=6,column=0, columnspan=2,rowspan=1)
 
 
 ############## BUILD INTO TOP LEFT FRAME ##############
 ########################################################
 
-Label(frameTopLeft,text="JOINT CONFIGURATIONS",font="Helvetica 16 bold").grid(row=0, column=0, columnspan=2,rowspan=1,sticky=W+E+N+S, padx=5, pady=5)
+Label(frameTopLeft,text="JOINT CONFIG",font="Helvetica 16 bold").grid(row=0, column=0, columnspan=2,rowspan=1,sticky=W+E+N+S)
 
 #stored variables
-var0 = 0
-var1 = 1
-var2 = 2
-var3 = 3
-var4 = 4
-var5 = 5
-var6 = 6
+var0 = DoubleVar()
+var1 = DoubleVar()
+var2 = DoubleVar()
+var3 = DoubleVar()
+var4 = DoubleVar()
+var5 = DoubleVar()
+var6 = DoubleVar()
 
 #sliders
 scale0 = Scale(frameTopLeft, variable = var0, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=1,column=1)
@@ -115,7 +177,7 @@ Label(frameTopLeft,text="m6_grip_r").grid(row=7,column=0)
 
 ############## BUILD INTO BOT LEFT FRAME ##############
 ########################################################
-Label(frameBotLeft,text="END EFFECTOR CONFIGURATION",font="Helvetica 16 bold").grid(row=0, column=0, columnspan=2,rowspan=1,sticky=W+E+N+S, padx=5, pady=5)
+Label(frameBotLeft,text="END EFFECTOR CONFIG",font="Helvetica 16 bold").grid(row=0, column=0, columnspan=2,rowspan=1,sticky=W+E+N+S)
 
 e0 = Entry(frameBotLeft, width=10).grid(row=1,column=1)
 e1 = Entry(frameBotLeft, width=10).grid(row=2,column=1)
