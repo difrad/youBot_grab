@@ -41,10 +41,10 @@ scanConfigurations = [
 [1,2,3,4,1],
 [3,2,1,3,3],
 [1,2,3,4,5],
+[1,2,1,4,5],
+[1,2,2,4,5],
 [1,2,3,4,5],
-[1,2,3,4,5],
-[1,2,3,4,5],
-[1,2,3,4,5]]
+[1,2,4,4,5]]
 
 def junk(data):
 	pass
@@ -205,9 +205,7 @@ def execute():
 			moveArm()
 		elif v0.get() == "predefined task":
 			#try to read the action
-			if v1.get() == 'zeroBot':
-				zeroBot()
-			elif v1.get() == 'dropRight':
+			if v1.get() == 'dropRight':
 				if b2['text'] == 'SCAN ENABLED':
 					scan()
 				dropRight()
