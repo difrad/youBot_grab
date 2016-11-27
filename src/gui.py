@@ -25,7 +25,8 @@ configurations = {
 	'left':[1,2,3,2,1],
 	'right':[1,2,3,2,1],
 	'middle':[1,2,3,2,1],
-	'hopper':[1,2,3,2,1]
+	'hopper':[1,2,3,2,1],
+	'safe':[1,2,3,2,0]
 }
 
 gripper = {
@@ -97,6 +98,17 @@ def moveGripper(data=False):
 		a.data.append(float(gripper['open'][1]))
 	gripperPublisher.publish(a)
 
+def safeHome(data):
+	'''our bandaid fix to make the robot move safely without crashing into the table.  So far, it works...'''
+
+	a = Float32MultiArray()
+	a.data.append(data[0])
+	a.data.append(data[1])
+	a.data.append(data[2])
+	a.data.append(data[3])	
+	a.data.append(data[4])	
+	safeHomePublisher.publish(a)
+
 def dropRight():
 	'''drops a block to the robot's right.  The robot is assumed to have a block and in the safeHome position '''
 	
@@ -109,7 +121,9 @@ def dropRight():
 	#openGripper
 	moveGripper()
 
-	#safeHome
+	rospy.sleep(2)
+	safeHome(configurations['safe'])
+
 
 def dropLeft():
 	'''drops a block to the robot's right.  The robot is assumed to have a block and in the safeHome position '''
@@ -298,6 +312,7 @@ Label(frameBotLeft,text="grip_r").grid(row=8,column=0)
 #create the publishers
 armPublisher = rospy.Publisher('moveArm', Float32MultiArray, queue_size=20)
 gripperPublisher = rospy.Publisher('moveGripper', Float32MultiArray, queue_size=20)
+safeHomePublisher = rospy.Publisher('safeHome', Float32MultiArray, queue_size=20)
 rospy.init_node('gui', anonymous=True)
 
 #run the loop indefinitely
