@@ -6,4 +6,9 @@
 	<node pkg="youbot_moveit_config" type="fk.py" name="fk" output="screen" >
 	</node>	
 
+	<include file="$(find youbot_driver_ros_interface)/launch/youbot_driver.launch">
+		<!-- <arg name="config" value="true"/> -->
+		<!-- <arg name="debug" value="$(arg debug)"/> -->
+	</include>
+
 </launch>

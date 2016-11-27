@@ -84,10 +84,7 @@ def execute():
 		
 		#decide on how to handle the request
 		if v0.get() == "forward kinematics":
-			# print "Doing forward.  Joint angles are: ",var0.get(),var1.get(),var2.get(),var3.get(),var4.get(),var5.get()
 			moveArm()
-		# elif v0.get() == "zero":
-		# 	print "Zeroing bot..."
 		elif v0.get() == "predefined task":
 			#try to read the action
 			if v1.get() == 'zeroBot':
