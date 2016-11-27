@@ -19,8 +19,21 @@ widthRight = 24  #width of the right frame
 widthLeft = 32  #width of the left frame
 taskOptions = ["dropRight","dropLeft","dropMiddle","grabBlock", "zeroBot"]
 
+
+#hardcode position configurations, from base to end effector
+configurations = {
+	'left':[1,2,3,2,1],
+	'right':[1,2,3,2,1],
+	'middle':[1,2,3,2,1],
+	'hopper':[1,2,3,2,1]
+}
+
+gripper = {
+	'open':[1,1],
+	'close':[0,0]
+}
+
 def junk(data):
-	# print var0.get(),var1.get()
 	pass
 
 def zeroBot():
@@ -38,8 +51,6 @@ def enableToggle():
 		enableBot = True
 		b0["text"] = "BOT IS ENABLED"
 
-	# enableStatus = 'True'
-
 def enableScan():
 	'''enables or disables the pretend scan function.  Defaults to disabled.'''
 	global enableScan
@@ -51,50 +62,129 @@ def enableScan():
 		enableScan = True
 		b2["text"] = "SCAN ENABLED"
 
-	# enableScanStatus = 'True'	
-
-def moveArm():
+def moveArm(data=[]):
 	'''publishes arm data'''
+
+	if len(data) == 0:
+		a = Float32MultiArray()
+		a.data.append(float(var0.get()))
+		a.data.append(float(var1.get()))
+		a.data.append(float(var2.get()))
+		a.data.append(float(var3.get()))
+		a.data.append(float(var4.get()))
+		armPublisher.publish(a)
+
+	else:
+		a = Float32MultiArray()
+		a.data.append(data[0])
+		a.data.append(data[1])
+		a.data.append(data[2])
+		a.data.append(data[3])
+		a.data.append(data[4])
+		armPublisher.publish(a)
+
+def moveGripper(data=False):
+	'''Moves gripper.  If False, gripper is OPEN.'''
+
 	a = Float32MultiArray()
-	# a.data.append(32.00)
-	a.data.append(float(var0.get()))
-	a.data.append(float(var1.get()))
-	a.data.append(float(var2.get()))
-	a.data.append(float(var3.get()))
-	a.data.append(float(var4.get()))
-	# rospy.loginfo(a)
-	armPublisher.publish(a)
+	if data:
+		#close gripper
+		a.data.append(float(gripper['close'][0]))
+		a.data.append(float(gripper['close'][1]))
+	else:
+		#open gripper
+		a.data.append(float(gripper['open'][0]))
+		a.data.append(float(gripper['open'][1]))
+	gripperPublisher.publish(a)
+
+def dropRight():
+	'''drops a block to the robot's right.  The robot is assumed to have a block and in the safeHome position '''
+	
+	#moveTo(goalRight)
+	moveArm(configurations['right'])
+
+	#delay()
+	rospy.sleep(3)
+
+	#openGripper
+	moveGripper()
+
+	#safeHome
+
+def dropLeft():
+	'''drops a block to the robot's right.  The robot is assumed to have a block and in the safeHome position '''
+	#moveTo(goalRight)
+	#delay()
+	#openGripper
+	#safeHome
+	pass
+
+def dropMiddle():
+	'''drops a block to the robot's right.  The robot is assumed to have a block and in the safeHome position '''
+	#moveTo(goalRight)
+	#delay()
+	#openGripper
+	#safeHome
+	pass
+
+def grabBlock():
+	'''grabs a block from a known location.  The robot is assumed to be in safeHome position and have no block in its gripper.'''
+	#moveTo(hopperClose)
+	#delay()
+	#openGripper
+	#moveTo(hopperTouch)
+	#delay()
+	#closeGripper
+	#delay()
+	#moveTo(hopperClose)
+	#delay()
+	#safeHome
+	pass
+
+def scan():
+	'''pretends to scan the structure with a 3D camera by moving to a few random configurations.'''
+	#generate random configurations (within selected thresholds)
+	#moveTo(conf1)
+	#delay()
+	#rinse and repeat
+	pass
 
 def execute():
 	'''Tries to execute the command to the robot'''
 	if enableBot:
 		print "Executing action..."
-		'''
-		if FK:
-			if action is None:
-				pull slider data and move
-			else:
-				ignore slider information, move, and update sliders
-		elif IK:
-			if action is None:
-				pull end effector data and try to move
-			else:
-				set end effector data to predefined locations/trajectories
-				'''
-		
+
 		#decide on how to handle the request
 		if v0.get() == "forward kinematics":
 			moveArm()
 		elif v0.get() == "predefined task":
 			#try to read the action
 			if v1.get() == 'zeroBot':
-				print 'zeroBot'
+				zeroBot()
 			elif v1.get() == 'dropRight':
 				if b2['text'] == 'SCAN ENABLED':
-					print 'doing scan'
-				else:
-					print 'not doing scan'
-				print 'dropRight'
+					# print 'doing scan'
+					scan()
+				# else:
+					# print 'not doing scan'
+				# print 'dropRight'
+				dropRight()
+			elif v1.get() == 'dropLeft':
+				if b2['text'] == 'SCAN ENABLED':
+					# print 'doing scan'
+					scan()
+				# else:
+					# print 'not doing scan'
+				# print 'dropLeft'
+				dropLeft()
+			elif v1.get() == 'dropMiddle':
+				if b2['text'] == 'SCAN ENABLED':
+					# print 'doing scan'
+					scan()
+				# else:
+					# print 'not doing scan'
+				# print 'dropMiddle'
+				dropMiddle()
 			else:
 				print 'not yet enabled'
 		else:
@@ -131,7 +221,6 @@ v0.set("Select Solver") # default value
 Label(frameTopRight,text="BOT SETUP",font="Helvetica 16 bold").grid(row=0, column=0, sticky=W+E+N+S, columnspan=2,rowspan=1)
 Label(frameTopRight,text="Solver:").grid(row=3, column=0, sticky=W+E+N+S)
 b0 = Button(frameTopRight, text="CLICK TO ENABLE BOT", command = enableToggle, width=widthRight)
-# b1 = Button(frameTopRight, text='ZERO BOT', command=zeroBot, width=widthRight) 
 Label(frameTopRight, text="Solver: ").grid(row=4,column=0)
 w0 = OptionMenu(frameTopRight, v0, "forward kinematics","inverse kinematics","predefined task")
 b0.grid(row=1,column=0, columnspan=2,rowspan=1)
@@ -142,7 +231,6 @@ w0.grid(row=4,column=1)
 #######################################################
 v1 = StringVar(frameTopRight)
 v1.set("zeroBot") # default value
-# Label(frameMidRight, text="QUEUE ACTION",font ="Helvetica 16 bold").grid(row=0,column=0, columnspan=2,rowspan=1)
 b2 = Button(frameTopRight, text="SCAN DISABLED", command=enableScan,width=widthRight)
 b2.grid(row=3,column=0, columnspan=2,rowspan=1)
 Label(frameTopRight, text="Predefined task: ").grid(row=5,column=0)
@@ -209,8 +297,7 @@ Label(frameBotLeft,text="grip_r").grid(row=8,column=0)
 
 #create the publishers
 armPublisher = rospy.Publisher('moveArm', Float32MultiArray, queue_size=20)
-# rospy.Subscriber("fail_safe",Bool, lostSignal)
-# rospy.Subscriber("pwm_control", UInt8MultiArray, updatePWM)
+gripperPublisher = rospy.Publisher('moveGripper', Float32MultiArray, queue_size=20)
 rospy.init_node('gui', anonymous=True)
 
 #run the loop indefinitely
