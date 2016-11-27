@@ -25,7 +25,8 @@ configurations = {
 	'left':[1,2,3,2,1],
 	'right':[1,2,3,2,1],
 	'middle':[1,2,3,2,1],
-	'hopper':[1,2,3,2,1],
+	'hopperClose':[1,2,3,2,1],
+	'hopperTouch':[1,2,3,2,1],
 	'safe':[1,2,3,2,0]
 }
 
@@ -124,36 +125,50 @@ def dropRight():
 	rospy.sleep(2)
 	safeHome(configurations['safe'])
 
-
 def dropLeft():
 	'''drops a block to the robot's right.  The robot is assumed to have a block and in the safeHome position '''
-	#moveTo(goalRight)
+
+	#moveTo(goalLeft)
+	moveArm(configurations['left'])
+
 	#delay()
+	rospy.sleep(3)
+
 	#openGripper
-	#safeHome
-	pass
+	moveGripper()
+
+	rospy.sleep(2)
+	safeHome(configurations['safe'])
 
 def dropMiddle():
 	'''drops a block to the robot's right.  The robot is assumed to have a block and in the safeHome position '''
-	#moveTo(goalRight)
+
+	#moveTo(goalMiddle)
+	moveArm(configurations['middle'])
+
 	#delay()
+	rospy.sleep(3)
+
 	#openGripper
-	#safeHome
-	pass
+	moveGripper()
+
+	rospy.sleep(2)
+	safeHome(configurations['safe'])
 
 def grabBlock():
 	'''grabs a block from a known location.  The robot is assumed to be in safeHome position and have no block in its gripper.'''
-	#moveTo(hopperClose)
-	#delay()
-	#openGripper
-	#moveTo(hopperTouch)
-	#delay()
-	#closeGripper
-	#delay()
-	#moveTo(hopperClose)
-	#delay()
-	#safeHome
-	pass
+
+	moveArm(configurations['hopperClose'])
+	rospy.sleep(3)
+	moveGripper()
+	rospy.sleep(2)
+	moveArm(configurations['hopperTouch'])
+	rospy.sleep(2)
+	moveGripper(data=True)
+	rospy.sleep(2)
+	moveArm(configurations['hopperClose'])
+	rospy.sleep(2)
+	safeHome(configurations['safe'])
 
 def scan():
 	'''pretends to scan the structure with a 3D camera by moving to a few random configurations.'''
@@ -199,6 +214,8 @@ def execute():
 					# print 'not doing scan'
 				# print 'dropMiddle'
 				dropMiddle()
+			elif v1.get() == 'grabBlock':
+				grabBlock()
 			else:
 				print 'not yet enabled'
 		else:
