@@ -110,7 +110,7 @@ def safeHomeCommand(data):
     msg.positions = jvaluelist
     pubArm.publish(msg)
 
-    rospy.sleep(5)
+    rospy.sleep(2)
 
     #creating a JointValue() List/Array
     jvaluelist = [0 for i in range(2)]    

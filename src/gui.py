@@ -23,17 +23,17 @@ taskOptions = ["dropRight","dropLeft","dropMiddle","grabBlock", "zeroBot"]
 
 #hardcode position configurations, from base to end effector
 configurations = {
-	'left':[1,2,3,2,1],
-	'right':[1,2,3,2,1],
-	'middle':[1,2,3,2,1],
-	'hopperClose':[1,2,3,2,1],
-	'hopperTouch':[1,2,3,2,1],
-	'safe':[1,2,3,2,0]
+	'left':[4.9055,0.1114,-3.01,0.861,2.862],
+	'right':[0.632,0.0039,-2.711,0.684,2.834],
+	'middle':[0.0205,0.441,-3.307,1.034,0.0097],
+	'hopperClose':[2.926,1.2326,-4.00,1.700,2.908],
+	'hopperTouch':[2.926,0.527,-3.419,1.703,2.908],
+	'safe':[0.02,0.02,-0.02,0.03,0.12]
 }
 
 gripper = {
-	'open':[1,1],
-	'close':[0,0]
+	'open':[0.0114,0.0114],
+	'close':[0.001,0.001]
 }
 
 #possible configurations that make the robot look like it's 'scanning'.  Can append more
@@ -96,18 +96,24 @@ def moveArm(data=[]):
 		a.data.append(data[4])
 		armPublisher.publish(a)
 
-def moveGripper(data=False):
+def moveGripper(data=[]):
 	'''Moves gripper.  If False, gripper is OPEN.'''
 
 	a = Float32MultiArray()
-	if data:
-		#close gripper
-		a.data.append(float(gripper['close'][0]))
-		a.data.append(float(gripper['close'][1]))
+	if len(data) == 0:
+		a.data.append(float(var5.get()))
+		a.data.append(float(var6.get()))
+	# if data:
+	# 	#close gripper
+	# 	a.data.append(float(gripper['close'][0]))
+	# 	a.data.append(float(gripper['close'][1]))
+	# else:
+	# 	#open gripper
+	# 	a.data.append(float(gripper['open'][0]))
+	# 	a.data.append(float(gripper['open'][1]))
 	else:
-		#open gripper
-		a.data.append(float(gripper['open'][0]))
-		a.data.append(float(gripper['open'][1]))
+		a.data.append(data[0])
+		a.data.append(data[1])
 	gripperPublisher.publish(a)
 
 def safeHome(data):
@@ -131,7 +137,7 @@ def dropRight():
 	rospy.sleep(3)
 
 	#openGripper
-	moveGripper()
+	moveGripper(gripper['open'])
 
 	rospy.sleep(2)
 	safeHome(configurations['safe'])
@@ -146,7 +152,7 @@ def dropLeft():
 	rospy.sleep(3)
 
 	#openGripper
-	moveGripper()
+	moveGripper(gripper['open'])
 
 	rospy.sleep(2)
 	safeHome(configurations['safe'])
@@ -161,7 +167,7 @@ def dropMiddle():
 	rospy.sleep(3)
 
 	#openGripper
-	moveGripper()
+	moveGripper(gripper['open'])
 
 	rospy.sleep(2)
 	safeHome(configurations['safe'])
@@ -171,11 +177,11 @@ def grabBlock():
 
 	moveArm(configurations['hopperClose'])
 	rospy.sleep(3)
-	moveGripper()
+	moveGripper(gripper['open'])
 	rospy.sleep(2)
 	moveArm(configurations['hopperTouch'])
 	rospy.sleep(2)
-	moveGripper(data=True)
+	moveGripper(gripper['close'])
 	rospy.sleep(2)
 	moveArm(configurations['hopperClose'])
 	rospy.sleep(2)
@@ -203,6 +209,7 @@ def execute():
 		#decide on how to handle the request
 		if v0.get() == "forward kinematics":
 			moveArm()
+			moveGripper()
 		elif v0.get() == "predefined task":
 			#try to read the action
 			if v1.get() == 'dropRight':
@@ -290,13 +297,13 @@ var5 = DoubleVar()
 var6 = DoubleVar()
 
 #sliders
-scale0 = Scale(frameTopLeft, variable = var0, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=1,column=1)
-scale1 = Scale(frameTopLeft, variable = var1, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=2,column=1)
-scale2 = Scale(frameTopLeft, variable = var2, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=3,column=1)
-scale3 = Scale(frameTopLeft, variable = var3, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=4,column=1)
-scale4 = Scale(frameTopLeft, variable = var4, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=5,column=1)
-scale5 = Scale(frameTopLeft, variable = var5, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=6,column=1)
-scale6 = Scale(frameTopLeft, variable = var6, from_ = 0.00, to = 5.00, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=7,column=1)
+scale0 = Scale(frameTopLeft, variable = var0, from_ = 0.02, to = 5.84, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=1,column=1)
+scale1 = Scale(frameTopLeft, variable = var1, from_ = 0.02, to = 2.61, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=2,column=1)
+scale2 = Scale(frameTopLeft, variable = var2, from_ = -5.02, to = -0.02, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=3,column=1)
+scale3 = Scale(frameTopLeft, variable = var3, from_ = 0.03, to = 3.42, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=4,column=1)
+scale4 = Scale(frameTopLeft, variable = var4, from_ = 0.12, to = 5.64, length=sliderLength, resolution=0.01, command = junk, orient = HORIZONTAL).grid(row=5,column=1)
+scale5 = Scale(frameTopLeft, variable = var5, from_ = 0.001, to = 0.011, length=sliderLength, resolution=0.001, command = junk, orient = HORIZONTAL).grid(row=6,column=1)
+scale6 = Scale(frameTopLeft, variable = var6, from_ = 0.001, to = 0.011, length=sliderLength, resolution=0.001, command = junk, orient = HORIZONTAL).grid(row=7,column=1)
 
 Label(frameTopLeft,text="m0_base").grid(row=1,column=0)
 Label(frameTopLeft,text="m1").grid(row=2,column=0)
