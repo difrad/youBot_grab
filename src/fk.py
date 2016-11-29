@@ -98,25 +98,114 @@ def gripperCommand(data):
     msg2.positions = jvaluegrippers
     pubGripper.publish(msg2)
 
+# def safeHomeCommand(data):
+#     '''Moves arm to safe home.  This function is less likely to have the robot impale itself into the tabletop.  We intentionally throw out data for the base conf.'''
+
+#     rospy.loginfo(rospy.get_caller_id() + "safeHome data: %s", data.data)
+
+#     # #creating a JointValue() List/Array
+#     # jvaluelist = [0 for i in range(1)]    
+
+#     # #creating a JointValue() Object for joint 1 (base)
+#     # jvalue1 = JointValue()
+#     # jvalue1.joint_uri = 'arm_joint_1'
+#     # jvalue1.unit = 'rad'
+#     # jvalue1.value = data.data[0]
+#     # jvaluelist[0] = jvalue1    
+
+#     # rospy.sleep(2)
+
+#     rospy.loginfo('moving arm')
+
+#     #creating a JointValue() List/Array
+#     jvaluelist = [0 for i in range(4)]
+
+#     #creating a JointValue() Object for joint 2
+#     jvalue2 = JointValue()
+#     jvalue2.joint_uri = 'arm_joint_2'
+#     jvalue2.unit = 'rad'
+#     jvalue2.value = data.data[1]
+#     jvaluelist[0] = jvalue2
+
+#     #creating a JointValue() Object for joint 3
+#     jvalue3 = JointValue()
+#     jvalue3.joint_uri = 'arm_joint_3'
+#     jvalue3.unit = 'rad'
+#     jvalue3.value = data.data[2]
+#     jvaluelist[1] = jvalue3
+
+#     #setting JointPosition msg properties 
+#     # rate = rospy.Rate(20)
+#     # msg = JointPositions()
+#     # msg.positions = jvaluelist
+#     # pubArm.publish(msg)
+
+#     # rospy.sleep(.5)
+
+#     #creating a JointValue() List/Array
+#     # jvaluelist = [0 for i in range(2)]    
+
+#     # #creating a JointValue() Object for joint 1 (base)
+#     # jvalue1 = JointValue()
+#     # jvalue1.joint_uri = 'arm_joint_1'
+#     # jvalue1.unit = 'rad'
+#     # jvalue1.value = data.data[0]
+#     # jvaluelist[0] = jvalue1    
+
+#     #creating a JointValue() Object for joint 4    
+#     jvalue4 = JointValue()
+#     jvalue4.joint_uri = 'arm_joint_4'
+#     jvalue4.unit = 'rad'
+#     jvalue4.value = data.data[3]
+#     jvaluelist[2] = jvalue4
+
+#     #creating a JointValue() Object for joint 5    
+#     jvalue5 = JointValue()
+#     jvalue5.joint_uri = 'arm_joint_5'
+#     jvalue5.unit = 'rad'
+#     jvalue5.value = data.data[4]
+#     jvaluelist[3] = jvalue5
+
+#     #setting JointPosition msg properties 
+#     rate = rospy.Rate(20)
+#     msg = JointPositions()
+#     msg.positions = jvaluelist
+#     pubArm.publish(msg)
+
+#     rospy.loginfo('moving base')
+
+#     rospy.sleep(.5)
+
+#     #creating a JointValue() List/Array
+#     jvaluelist = [0 for i in range(1)]    
+
+#     #creating a JointValue() Object for joint 1 (base)
+#     jvalue1 = JointValue()
+#     jvalue1.joint_uri = 'arm_joint_1'
+#     jvalue1.unit = 'rad'
+#     jvalue1.value = data.data[0]
+#     jvaluelist[0] = jvalue1    
+
+#     rospy.sleep(1)
+
+#     #setting JointPosition msg properties 
+#     rate = rospy.Rate(20)
+#     msg = JointPositions()
+#     msg.positions = jvaluelist
+#     pubArm.publish(msg)
+
 def safeHomeCommand(data):
-    '''Moves arm to safe home.  This function is less likely to have the robot impale itself into the tabletop.  We intentionally throw out data for the base conf.'''
-
-    rospy.loginfo(rospy.get_caller_id() + "safeHome data: %s", data.data)
+    rospy.loginfo(rospy.get_caller_id() + "arm data: %s", data.data)
 
     #creating a JointValue() List/Array
-    jvaluelist = [0 for i in range(1)]    
+    jvaluelist = [0 for i in range(4)]    
 
-    #creating a JointValue() Object for joint 1 (base)
-    jvalue1 = JointValue()
-    jvalue1.joint_uri = 'arm_joint_1'
-    jvalue1.unit = 'rad'
-    jvalue1.value = data.data[0]
-    jvaluelist[0] = jvalue1    
-
-    rospy.sleep(2)
-
-    #creating a JointValue() List/Array
-    jvaluelist = [0 for i in range(2)]
+    # #creating a JointValue() Object for joint 1 (base)
+    # jvalue1 = JointValue()
+    # jvalue1.joint_uri = 'arm_joint_1'
+    # jvalue1.unit = 'rad'
+    # jvalue1.value = data.data[0]
+    # jvaluelist[0] = jvalue1    
 
     #creating a JointValue() Object for joint 2
     jvalue2 = JointValue()
@@ -132,40 +221,28 @@ def safeHomeCommand(data):
     jvalue3.value = data.data[2]
     jvaluelist[1] = jvalue3
 
-    #setting JointPosition msg properties 
-    rate = rospy.Rate(20)
-    msg = JointPositions()
-    msg.positions = jvaluelist
-    pubArm.publish(msg)
-
-    rospy.sleep(.5)
-
-    #creating a JointValue() List/Array
-    jvaluelist = [0 for i in range(2)]    
-
-    # #creating a JointValue() Object for joint 1 (base)
-    # jvalue1 = JointValue()
-    # jvalue1.joint_uri = 'arm_joint_1'
-    # jvalue1.unit = 'rad'
-    # jvalue1.value = data.data[0]
-    # jvaluelist[0] = jvalue1    
-
     #creating a JointValue() Object for joint 4    
     jvalue4 = JointValue()
     jvalue4.joint_uri = 'arm_joint_4'
     jvalue4.unit = 'rad'
     jvalue4.value = data.data[3]
-    jvaluelist[0] = jvalue4
+    jvaluelist[2] = jvalue4
 
     #creating a JointValue() Object for joint 5    
     jvalue5 = JointValue()
     jvalue5.joint_uri = 'arm_joint_5'
     jvalue5.unit = 'rad'
     jvalue5.value = data.data[4]
-    jvaluelist[1] = jvalue5
+    jvaluelist[3] = jvalue5
 
-    rospy.sleep(.5)
-
+    #setting JointPosition msg properties 
+    rate = rospy.Rate(20)
+    msg = JointPositions()
+    msg.positions = jvaluelist
+    pubArm.publish(msg)
+    
+    rospy.sleep(2)
+  
     #creating a JointValue() List/Array
     jvaluelist = [0 for i in range(1)]    
 
@@ -174,15 +251,12 @@ def safeHomeCommand(data):
     jvalue1.joint_uri = 'arm_joint_1'
     jvalue1.unit = 'rad'
     jvalue1.value = data.data[0]
-    jvaluelist[0] = jvalue1    
+    jvaluelist[0] = jvalue1  
 
-    rospy.sleep(1)
-
-    #setting JointPosition msg properties 
-    rate = rospy.Rate(20)
     msg = JointPositions()
     msg.positions = jvaluelist
     pubArm.publish(msg)
+
 
 def listener():
     rospy.init_node('fk', anonymous=True)

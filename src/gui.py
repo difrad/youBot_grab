@@ -26,12 +26,13 @@ configurations = {
 	# 'left':[4.9055,0.1114,-3.01,0.861,2.862],
 	# 'right':[0.632,0.0039,-2.711,0.684,2.834],
 	'left':[3.14-1,1.90,-1.50,2.73,2.88],
-	'right':[3.14+1,0.0039,-2.711,0.684,2.834],
+	'right':[3.14+1,1.90,-1.50,2.73,2.88],
 	# 'middle':[0.0205,0.441,-3.307,1.034,0.0097],
 	# 'hopperClose':[2.926,1.2326,-4.00,1.700,2.908-3.14],
 	# 'hopperTouch':[2.926,0.527,-3.419,1.703,2.908-3.14],
 	'hopperClose':[0.02,2.04,-0.68,0.69,2.88],
-	'hopperTouch':[0.02,2.43,-1.74,1.38,2.88],
+	# 'hopperTouch':[0.02,2.43,-1.74,1.38,2.88],
+	'hopperTouch':[0.02,2.21,-1.15,0.82,2.88],
 	'safe':[0.02+3.14,0.02,-0.02,0.03,0.12]
 }
 
@@ -42,13 +43,11 @@ gripper = {
 
 #possible configurations that make the robot look like it's 'scanning'.  Can append more
 scanConfigurations = [
-[1,2,3,4,1],
-[3,2,1,3,3],
-[1,2,3,4,5],
-[1,2,1,4,5],
-[1,2,2,4,5],
-[1,2,3,4,5],
-[1,2,4,4,5]]
+[0.02+3.14,0.02,-0.02,2.18,2.88],
+[0.02+3.14,0.02,-0.02,1.80,2.88],
+[0.02+3.14,1.48,-1.97,2.94,2.88],
+[0.02+3.14,1.80,-0.57,0.82,2.88]
+]
 
 def junk(data):
 	pass
@@ -107,14 +106,6 @@ def moveGripper(data=[]):
 	if len(data) == 0:
 		a.data.append(float(var5.get()))
 		a.data.append(float(var6.get()))
-	# if data:
-	# 	#close gripper
-	# 	a.data.append(float(gripper['close'][0]))
-	# 	a.data.append(float(gripper['close'][1]))
-	# else:
-	# 	#open gripper
-	# 	a.data.append(float(gripper['open'][0]))
-	# 	a.data.append(float(gripper['open'][1]))
 	else:
 		a.data.append(data[0])
 		a.data.append(data[1])
@@ -138,7 +129,7 @@ def dropRight():
 	moveArm(configurations['right'])
 
 	#delay()
-	rospy.sleep(3)
+	rospy.sleep(5)
 
 	#openGripper
 	moveGripper(gripper['open'])
@@ -153,7 +144,7 @@ def dropLeft():
 	moveArm(configurations['left'])
 
 	#delay()
-	rospy.sleep(3)
+	rospy.sleep(5)
 
 	#openGripper
 	moveGripper(gripper['open'])
@@ -161,49 +152,48 @@ def dropLeft():
 	rospy.sleep(2)
 	safeHome(configurations['safe'])
 
-def dropMiddle():
-	'''drops a block to the robot's right.  The robot is assumed to have a block and in the safeHome position '''
-
-	#moveTo(goalMiddle)
-	moveArm(configurations['middle'])
-
-	#delay()
 	rospy.sleep(3)
-
-	#openGripper
-	moveGripper(gripper['open'])
-
-	rospy.sleep(2)
-	safeHome(configurations['safe'])
+	grabBlock()
 
 def grabBlock():
 	'''grabs a block from a known location.  The robot is assumed to be in safeHome position and have no block in its gripper.'''
 
 	moveArm(configurations['hopperClose'])
-	rospy.sleep(1.5)
+	rospy.sleep(1)
 	moveGripper(gripper['open'])
-	rospy.sleep(1)
+	rospy.sleep(2)
 	moveArm(configurations['hopperTouch'])
-	rospy.sleep(1)
+	rospy.sleep(2.5)
 	moveGripper(gripper['close'])
-	rospy.sleep(1)
+	rospy.sleep(0.5)
 	moveArm(configurations['hopperClose'])
-	rospy.sleep(1)
+	rospy.sleep(3)
 	safeHome(configurations['safe'])
+	# rospy.sleep(5)
 
 def scan():
 	'''pretends to scan the structure with a 3D camera by moving to a few random configurations.'''
 
-	size = len(scanConfigurations)
-	vals = random.sample(xrange(0,size), 2)
+	moveArm(scanConfigurations[0])
+	rospy.sleep(1)
 
-	for i in range(len(vals)):
-		rospy.loginfo(rospy.get_caller_id() + "scan data: %s", vals[i])
-		moveArm(scanConfigurations[i])
-		rospy.sleep(2)
+	moveArm(scanConfigurations[1])
+	rospy.sleep(1)
+
+	moveArm(scanConfigurations[0])
+	rospy.sleep(4)
+
+	moveArm(scanConfigurations[2])
+	rospy.sleep(4)
+
+	moveArm(scanConfigurations[3])
+	rospy.sleep(4)
+
+	moveArm(scanConfigurations[2])
+	rospy.sleep(4)
 
 	safeHome(configurations['safe'])
-	rospy.sleep(2)
+	rospy.sleep(3)
 
 def execute():
 	'''Tries to execute the command to the robot'''
