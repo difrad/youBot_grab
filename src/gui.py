@@ -23,12 +23,16 @@ taskOptions = ["dropRight","dropLeft","dropMiddle","grabBlock", "zeroBot"]
 
 #hardcode position configurations, from base to end effector
 configurations = {
-	'left':[4.9055,0.1114,-3.01,0.861,2.862],
-	'right':[0.632,0.0039,-2.711,0.684,2.834],
-	'middle':[0.0205,0.441,-3.307,1.034,0.0097],
-	'hopperClose':[2.926,1.2326,-4.00,1.700,2.908],
-	'hopperTouch':[2.926,0.527,-3.419,1.703,2.908],
-	'safe':[0.02,0.02,-0.02,0.03,0.12]
+	# 'left':[4.9055,0.1114,-3.01,0.861,2.862],
+	# 'right':[0.632,0.0039,-2.711,0.684,2.834],
+	'left':[3.14-1,1.90,-1.50,2.73,2.88],
+	'right':[3.14+1,0.0039,-2.711,0.684,2.834],
+	# 'middle':[0.0205,0.441,-3.307,1.034,0.0097],
+	# 'hopperClose':[2.926,1.2326,-4.00,1.700,2.908-3.14],
+	# 'hopperTouch':[2.926,0.527,-3.419,1.703,2.908-3.14],
+	'hopperClose':[0.02,2.04,-0.68,0.69,2.88],
+	'hopperTouch':[0.02,2.43,-1.74,1.38,2.88],
+	'safe':[0.02+3.14,0.02,-0.02,0.03,0.12]
 }
 
 gripper = {
@@ -176,15 +180,15 @@ def grabBlock():
 	'''grabs a block from a known location.  The robot is assumed to be in safeHome position and have no block in its gripper.'''
 
 	moveArm(configurations['hopperClose'])
-	rospy.sleep(3)
+	rospy.sleep(1.5)
 	moveGripper(gripper['open'])
-	rospy.sleep(2)
+	rospy.sleep(1)
 	moveArm(configurations['hopperTouch'])
-	rospy.sleep(2)
+	rospy.sleep(1)
 	moveGripper(gripper['close'])
-	rospy.sleep(2)
+	rospy.sleep(1)
 	moveArm(configurations['hopperClose'])
-	rospy.sleep(2)
+	rospy.sleep(1)
 	safeHome(configurations['safe'])
 
 def scan():
