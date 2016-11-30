@@ -18,21 +18,15 @@ enableBot = False #if true, robot commands will be published
 enableScan = False #if true, robot scan will be run on predefined actions
 widthRight = 24  #width of the right frame
 widthLeft = 32  #width of the left frame
-taskOptions = ["dropRight","dropLeft","dropMiddle","grabBlock", "zeroBot"]
+taskOptions = ["dropRight","dropLeft","grabBlock","scanLeft","scanRight"]
 
 
 #hardcode position configurations, from base to end effector
 configurations = {
-	# 'left':[4.9055,0.1114,-3.01,0.861,2.862],
-	# 'right':[0.632,0.0039,-2.711,0.684,2.834],
 	'left':[3.14-1,1.90,-1.50,2.73,2.88],
 	'right':[3.14+1,1.90,-1.50,2.73,2.88],
-	# 'middle':[0.0205,0.441,-3.307,1.034,0.0097],
-	# 'hopperClose':[2.926,1.2326,-4.00,1.700,2.908-3.14],
-	# 'hopperTouch':[2.926,0.527,-3.419,1.703,2.908-3.14],
 	'hopperClose':[0.02,2.04,-0.68,0.69,2.88],
-	# 'hopperTouch':[0.02,2.43,-1.74,1.38,2.88],
-	'hopperTouch':[0.02,2.21,-1.15,0.82,2.88],
+	'hopperTouch':[0.02,2.16,-1.15,0.95,2.88],
 	'safe':[0.02+3.14,0.02,-0.02,0.03,0.12]
 }
 
@@ -42,11 +36,25 @@ gripper = {
 }
 
 #possible configurations that make the robot look like it's 'scanning'.  Can append more
-scanConfigurations = [
+scanMiddleConfiguration = [
 [0.02+3.14,0.02,-0.02,2.18,2.88],
 [0.02+3.14,0.02,-0.02,1.80,2.88],
 [0.02+3.14,1.48,-1.97,2.94,2.88],
 [0.02+3.14,1.80,-0.57,0.82,2.88]
+]
+
+scanRightConfiguration = [
+[3.14+1,0.02,-0.02,2.18,2.88],
+[3.14+1,0.02,-0.02,1.80,2.88],
+[3.14+1,1.48,-1.97,2.94,2.88],
+[3.14+1,1.80,-0.57,0.82,2.88]
+]
+
+scanLeftConfiguration = [
+[3.14-1,0.02,-0.02,2.18,2.88],
+[3.14-1,0.02,-0.02,1.80,2.88],
+[3.14-1,1.48,-1.97,2.94,2.88],
+[3.14-1,1.80,-0.57,0.82,2.88]
 ]
 
 def junk(data):
@@ -125,7 +133,7 @@ def safeHome(data):
 def dropRight():
 	'''drops a block to the robot's right.  The robot is assumed to have a block and in the safeHome position '''
 	
-	#moveTo(goalRight)
+	#moveTo(goalLeft)
 	moveArm(configurations['right'])
 
 	#delay()
@@ -136,6 +144,9 @@ def dropRight():
 
 	rospy.sleep(2)
 	safeHome(configurations['safe'])
+
+	rospy.sleep(3)
+	grabBlock()
 
 def dropLeft():
 	'''drops a block to the robot's right.  The robot is assumed to have a block and in the safeHome position '''
@@ -171,25 +182,73 @@ def grabBlock():
 	safeHome(configurations['safe'])
 	# rospy.sleep(5)
 
-def scan():
+def scanLeft():
 	'''pretends to scan the structure with a 3D camera by moving to a few random configurations.'''
 
-	moveArm(scanConfigurations[0])
+	moveArm(scanLeftConfiguration[0])
 	rospy.sleep(1)
 
-	moveArm(scanConfigurations[1])
+	moveArm(scanLeftConfiguration[1])
 	rospy.sleep(1)
 
-	moveArm(scanConfigurations[0])
+	moveArm(scanLeftConfiguration[0])
 	rospy.sleep(4)
 
-	moveArm(scanConfigurations[2])
+	moveArm(scanLeftConfiguration[2])
 	rospy.sleep(4)
 
-	moveArm(scanConfigurations[3])
+	moveArm(scanLeftConfiguration[3])
 	rospy.sleep(4)
 
-	moveArm(scanConfigurations[2])
+	moveArm(scanLeftConfiguration[2])
+	rospy.sleep(4)
+
+	safeHome(configurations['safe'])
+	rospy.sleep(3)
+
+def scanRight():
+	'''pretends to scan the structure with a 3D camera by moving to a few random configurations.'''
+
+	moveArm(scanRightConfiguration[0])
+	rospy.sleep(1)
+
+	moveArm(scanRightConfiguration[1])
+	rospy.sleep(1)
+
+	moveArm(scanRightConfiguration[0])
+	rospy.sleep(4)
+
+	moveArm(scanRightConfiguration[2])
+	rospy.sleep(4)
+
+	moveArm(scanRightConfiguration[3])
+	rospy.sleep(4)
+
+	moveArm(scanRightConfiguration[2])
+	rospy.sleep(4)
+
+	safeHome(configurations['safe'])
+	rospy.sleep(3)
+
+def scanMiddle():
+	'''pretends to scan the structure with a 3D camera by moving to a few random configurations.'''
+
+	moveArm(scanMiddleConfiguration[0])
+	rospy.sleep(1)
+
+	moveArm(scanMiddleConfiguration[1])
+	rospy.sleep(1)
+
+	moveArm(scanMiddleConfiguration[0])
+	rospy.sleep(4)
+
+	moveArm(scanMiddleConfiguration[2])
+	rospy.sleep(4)
+
+	moveArm(scanMiddleConfiguration[3])
+	rospy.sleep(4)
+
+	moveArm(scanMiddleConfiguration[2])
 	rospy.sleep(4)
 
 	safeHome(configurations['safe'])
@@ -208,18 +267,18 @@ def execute():
 			#try to read the action
 			if v1.get() == 'dropRight':
 				if b2['text'] == 'SCAN ENABLED':
-					scan()
+					scanMiddle()
 				dropRight()
 			elif v1.get() == 'dropLeft':
 				if b2['text'] == 'SCAN ENABLED':
-					scan()
+					scanMiddle()
 				dropLeft()
-			elif v1.get() == 'dropMiddle':
-				if b2['text'] == 'SCAN ENABLED':
-					scan()
-				dropMiddle()
 			elif v1.get() == 'grabBlock':
 				grabBlock()
+			elif v1.get() == 'scanRight':
+				scanRight()
+			elif v1.get() == 'scanLeft':
+				scanLeft()
 			else:
 				print 'not yet enabled'
 		else:
