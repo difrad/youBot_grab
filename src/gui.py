@@ -13,49 +13,66 @@ from std_msgs.msg import Float32MultiArray, Bool,UInt8MultiArray
 from Tkinter import *
 import random
 
-sliderLength = 160 #the physical length of a slider
+sliderLength = 640 #the physical length of a slider
 enableBot = False #if true, robot commands will be published
 enableScan = False #if true, robot scan will be run on predefined actions
 widthRight = 24  #width of the right frame
 widthLeft = 32  #width of the left frame
-taskOptions = ["dropRight","dropLeft","grabBlock","scanLeft","scanRight"]
+taskOptions = ["dropRight","dropLeft","grabBlock","scanLeft","scanRight",'waveHello',"stackGood","stackBad","giveHumanGood","giveHumanBad","toggleGripper"]
 
 
 #hardcode position configurations, from base to end effector
 configurations = {
-	'left':[3.14-1,1.90,-1.50,2.73,2.88],
-	'right':[3.14+1,1.90,-1.50,2.73,2.88],
-	'hopperClose':[0.02,2.04,-0.68,0.69,2.88],
-	'hopperTouch':[0.02,2.16,-1.15,0.95,2.88],
-	'safe':[0.02+3.14,0.02,-0.02,0.03,0.12]
+	'left':[3.14-1.24,1.77,-1.30,2.23,2.88],
+	'right':[3.14+1.24,1.77,-1.30,2.23,2.88],
+	'middleGood':[3.14,0.98,-0.92,3.01,2.88],
+	'middleRight':[3.14-.5,0.98,-0.92,3.01,2.88],
+	'middleLeft':[3.14+.5,0.98,-0.92,3.01,2.88],
+	#'hopperClose':[0.02,2.04,-0.68,0.69,2.88],
+	#'hopperTouch':[0.02,2.16,-1.15,0.95,2.88],
+	'hopperPoint0':[0.0224, 0.93, -0.24, 1.27, 2.948],
+	'hopperPoint1':[0.0224, 1.033, -0.335, 1.25, 2.948],
+	'hopperPoint2':[0.0224, 1.132, -0.407, 1.25, 2.948],
+	'hopperPoint3':[0.0224, 1.365, -0.693585, 1.7, 2.948],
+	'hopperPoint4':[0.0224, 1.365, -0.693585, 1.295, 2.948],
+	'safe':[0.02+3.14,0.02,-0.02,0.03,0.12],
+	'stackGood':[0.02,0.29,-3.06,0.03,3.47]
 }
 
 gripper = {
+	# 'open':[0.0114,0.000001],
 	'open':[0.0114,0.0114],
-	'close':[0.001,0.001]
+	# 'close':[0.000001,0.000001]
+	'close':[0.000001,0.0065]
 }
 
 #possible configurations that make the robot look like it's 'scanning'.  Can append more
 scanMiddleConfiguration = [
-[0.02+3.14,0.02,-0.02,2.18,2.88],
-[0.02+3.14,0.02,-0.02,1.80,2.88],
-[0.02+3.14,1.48,-1.97,2.94,2.88],
-[0.02+3.14,1.80,-0.57,0.82,2.88]
+[0.02+3.14,0.02,-0.02,2.18,2.88-1],
+[0.02+3.14,0.02,-0.02,1.80,2.88+1],
+[0.02+3.14,1.48,-1.97,2.94,2.88-1],
+[0.02+3.14,1.80,-0.57,0.82,2.88+1]
 ]
 
 scanRightConfiguration = [
-[3.14+1,0.02,-0.02,2.18,2.88],
-[3.14+1,0.02,-0.02,1.80,2.88],
-[3.14+1,1.48,-1.97,2.94,2.88],
-[3.14+1,1.80,-0.57,0.82,2.88]
+[3.14+1.24,0.02,-0.02,1.70,2.88],
+[3.14+1.24,0.02,-0.02,2.40,2.88],
+# [3.38+1,1.48,-1.97,2.94,2.88-1],
+[3.14+1.24,0.85,-1.01,2.95,2.88],
+[3.14+1.24,1.20,-0.14,1.36,2.88+1]
 ]
 
 scanLeftConfiguration = [
-[3.14-1,0.02,-0.02,2.18,2.88],
-[3.14-1,0.02,-0.02,1.80,2.88],
-[3.14-1,1.48,-1.97,2.94,2.88],
-[3.14-1,1.80,-0.57,0.82,2.88]
+[3.14-1.24,0.02,-0.02,1.70,2.88],
+[3.14-1.24,0.02,-0.02,2.40,2.88],
+# [3.38+1,1.48,-1.97,2.94,2.88-1],
+[3.14-1.24,0.85,-1.01,2.95,2.88],
+[3.14-1.24,1.20,-0.14,1.36,2.88+1]
 ]
+
+def check():
+	'''hopefully makes it so you can control+c from the terminal'''
+	root.after(50,check) #50ms
 
 def junk(data):
 	pass
@@ -137,7 +154,7 @@ def dropRight():
 	moveArm(configurations['right'])
 
 	#delay()
-	rospy.sleep(5)
+	rospy.sleep(4)
 
 	#openGripper
 	moveGripper(gripper['open'])
@@ -145,7 +162,7 @@ def dropRight():
 	rospy.sleep(2)
 	safeHome(configurations['safe'])
 
-	rospy.sleep(3)
+	rospy.sleep(1)
 	grabBlock()
 
 def dropLeft():
@@ -155,7 +172,7 @@ def dropLeft():
 	moveArm(configurations['left'])
 
 	#delay()
-	rospy.sleep(5)
+	rospy.sleep(4)
 
 	#openGripper
 	moveGripper(gripper['open'])
@@ -163,21 +180,76 @@ def dropLeft():
 	rospy.sleep(2)
 	safeHome(configurations['safe'])
 
-	rospy.sleep(3)
+	rospy.sleep(1)
 	grabBlock()
+
+def stackGood():
+	#moveTo(goalLeft)
+	moveArm(configurations['stackGood'])
+	rospy.sleep(4)
+
+	#openGripper
+	moveGripper(gripper['open'])
+	rospy.sleep(2)
+
+	safeHome(configurations['safe'])
+	rospy.sleep(1)
+
+def stackBad():
+	pass
+
+def giveHumanGood():
+	moveArm(configurations['middleGood'])
+	rospy.sleep(4.5)
+
+	#openGripper
+	moveGripper(gripper['open'])
+	rospy.sleep(3)
+
+	safeHome(configurations['safe'])
+	rospy.sleep(1)
+
+def giveHumanBad():
+	moveArm(configurations['middleLeft'])
+	rospy.sleep(3)
+
+	moveArm(configurations['middleRight'])
+	rospy.sleep(2)
+
+	moveArm(configurations['middleGood'])
+	rospy.sleep(2)
+
+	#openGripper
+	moveGripper(gripper['open'])
+	rospy.sleep(2.5)
+
+	safeHome(configurations['safe'])
+	rospy.sleep(1)
 
 def grabBlock():
 	'''grabs a block from a known location.  The robot is assumed to be in safeHome position and have no block in its gripper.'''
 
-	moveArm(configurations['hopperClose'])
-	rospy.sleep(1)
+	# moveArm(configurations['hopperPoint0'])
+	# rospy.sleep(1)
+	#moveArm(configurations['hopperPoint1'])
+	#rospy.sleep(1)
 	moveGripper(gripper['open'])
-	rospy.sleep(2)
-	moveArm(configurations['hopperTouch'])
-	rospy.sleep(2.5)
+	rospy.sleep(3)
+	# moveArm(configurations['hopperPoint2'])
+	rospy.sleep(3)
+	moveArm(configurations['hopperPoint3'])
+	rospy.sleep(3)
+	moveArm(configurations['hopperPoint4'])
+	rospy.sleep(3)
 	moveGripper(gripper['close'])
-	rospy.sleep(0.5)
-	moveArm(configurations['hopperClose'])
+	rospy.sleep(1)
+	#moveArm(configurations['hopperPoint3'])
+	#rospy.sleep(3)
+	# moveArm(configurations['hopperPoint2'])
+	# rospy.sleep(3)
+	#moveArm(configurations['hopperPoint1'])
+	#rospy.sleep(3)
+	moveArm(configurations['hopperPoint0'])
 	rospy.sleep(3)
 	safeHome(configurations['safe'])
 	# rospy.sleep(5)
@@ -200,8 +272,8 @@ def scanLeft():
 	moveArm(scanLeftConfiguration[3])
 	rospy.sleep(4)
 
-	moveArm(scanLeftConfiguration[2])
-	rospy.sleep(4)
+	# moveArm(scanLeftConfiguration[2])
+	# rospy.sleep(4)
 
 	safeHome(configurations['safe'])
 	rospy.sleep(3)
@@ -224,8 +296,8 @@ def scanRight():
 	moveArm(scanRightConfiguration[3])
 	rospy.sleep(4)
 
-	moveArm(scanRightConfiguration[2])
-	rospy.sleep(4)
+	# moveArm(scanRightConfiguration[2])
+	# rospy.sleep(4)
 
 	safeHome(configurations['safe'])
 	rospy.sleep(3)
@@ -254,6 +326,26 @@ def scanMiddle():
 	safeHome(configurations['safe'])
 	rospy.sleep(3)
 
+def waveHello():
+	count = 3
+
+	for i in range(count):
+		moveArm(scanMiddleConfiguration[0])
+		rospy.sleep(.2)
+
+		moveArm(scanMiddleConfiguration[1])
+		rospy.sleep(.2)
+
+def toggleGripper():
+	count = 5
+
+	for i in range(count):
+		#openGripper
+		moveGripper(gripper['open'])
+		rospy.sleep(2)
+		moveGripper(gripper['close'])
+		rospy.sleep(2)
+
 def execute():
 	'''Tries to execute the command to the robot'''
 	if enableBot:
@@ -279,6 +371,18 @@ def execute():
 				scanRight()
 			elif v1.get() == 'scanLeft':
 				scanLeft()
+			elif v1.get() == 'waveHello':
+				waveHello()
+			elif v1.get() == 'stackGood':
+				stackGood()
+			elif v1.get() == 'stackBad':
+				stackBad()
+			elif v1.get() == 'giveHumanGood':
+				giveHumanGood()
+			elif v1.get() == 'giveHumanBad':
+				giveHumanBad()
+			elif v1.get() == 'toggleGripper':
+				toggleGripper()
 			else:
 				print 'not yet enabled'
 		else:
@@ -324,11 +428,11 @@ w0.grid(row=4,column=1)
 ############## BUILD INTO MID RIGHT FRAME ##############
 #######################################################
 v1 = StringVar(frameTopRight)
-v1.set("zeroBot") # default value
+v1.set("waveHello") # default value
 b2 = Button(frameTopRight, text="SCAN DISABLED", command=enableScan,width=widthRight)
 b2.grid(row=3,column=0, columnspan=2,rowspan=1)
 Label(frameTopRight, text="Predefined task: ").grid(row=5,column=0)
-w1 = OptionMenu(frameTopRight, v1, taskOptions[0],taskOptions[1],taskOptions[2],taskOptions[3],taskOptions[4]).grid(row=5,column=1)
+w1 = OptionMenu(frameTopRight, v1, taskOptions[0],taskOptions[1],taskOptions[2],taskOptions[3],taskOptions[4],taskOptions[5],taskOptions[6],taskOptions[7],taskOptions[8],taskOptions[10]).grid(row=5,column=1)
 
 ############## BUILD INTO BOT RIGHT FRAME ##############
 #######################################################
@@ -396,4 +500,5 @@ safeHomePublisher = rospy.Publisher('safeHome', Float32MultiArray, queue_size=20
 rospy.init_node('gui', anonymous=True)
 
 #run the loop indefinitely
+root.after(50,check)
 root.mainloop()
