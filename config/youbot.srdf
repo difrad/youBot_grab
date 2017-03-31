@@ -9,20 +9,11 @@
     <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
     <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
     <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
-    <group name="youbot_arm">
-        <chain base_link="arm_link_1" tip_link="arm_link_4" />
-    </group>
-    <group name="base">
-        <link name="arm_link_1" />
-        <link name="arm_link_2" />
-        <link name="arm_link_0" />
-        <joint name="arm_joint_1" />
-        <joint name="arm_joint_2" />
-        <joint name="arm_joint_0" />
+    <group name="arm">
+        <chain base_link="base_link" tip_link="arm_link_5" />
     </group>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="arm_eef" parent_link="arm_link_1" group="youbot_arm" />
-    <end_effector name="base_eef" parent_link="arm_link_1" group="base" />
+    <end_effector name="arm_eef" parent_link="arm_link_4" group="arm" />
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="virtual_joint" type="planar" parent_frame="odom_combined" child_link="base_footprint" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->

@@ -14,11 +14,9 @@
 	<arg name="load_robot_description" value="true"/>
 </include>
 
-
-
+<!-- run the robot interface -->
 <node pkg="youbot_moveit_config" type="gui.py" name="gui" output="screen" >
 </node>
-
 <node pkg="youbot_moveit_config" type="fk.py" name="fk" output="screen" >
 </node>	
 
@@ -26,11 +24,18 @@
 <include file="$(find youbot_driver_ros_interface)/launch/youbot_driver.launch">
 </include>
 
+<!-- launch rviz -->
 <node pkg="rviz" type="rviz" name="rviz" />
 
 <!-- urdf information -->
 <param name="robot_description" command="cat $(find youbot_moveit_config)/youbot.urdf" />
 
-
+<!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
+<include file="$(find youbot_moveit_config)/launch/move_group.launch">
+	<arg name="allow_trajectory_execution" value="true"/>
+	<arg name="fake_execution" value="true"/>
+	<arg name="info" value="true"/>
+	<arg name="debug" value="$(arg debug)"/>
+</include>
 
 </launch>

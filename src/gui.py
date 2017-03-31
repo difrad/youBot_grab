@@ -18,7 +18,7 @@ enableBot = False #if true, robot commands will be published
 enableScan = False #if true, robot scan will be run on predefined actions
 widthRight = 24  #width of the right frame
 widthLeft = 32  #width of the left frame
-taskOptions = ["dropRight","dropLeft","grabBlock","scanLeft","scanRight",'waveHello',"stackGood","stackBad","giveHumanGood","giveHumanBad","toggleGripper"]
+taskOptions = ["dropRight","dropLeft","grabBlock","scanLeft","scanRight",'waveHello',"stackGood","stackBad","giveHumanGood","giveHumanBad","toggleGripper","moveFromList"]
 
 
 #hardcode position configurations, from base to end effector
@@ -38,6 +38,26 @@ configurations = {
 	'safe':[0.02+3.14,0.02,-0.02,0.03,0.12],
 	'stackGood':[0.02,0.29,-3.06,0.03,3.47]
 }
+
+#location where the blocks are sitting
+moveList = [
+[[0.48, 1.47, -1.12, 2.54, 3.01],[0.48, 1.47, -1.12, 2.87, 3.01]],
+
+[[0.48, 1.47, -1.03, 2.51, 3.01],[0.48, 1.47, -1.03, 2.84, 3.01]],
+
+[[0.48, 1.47, -0.92, 2.38, 3.01],[0.48, 1.47, -0.92, 2.71, 3.01]],
+
+[[0.48, 1.47, -0.81, 2.35, 3.01],[0.48, 1.47, -0.81, 2.68, 3.01]],
+[[0.48, 1.47, -0.65, 2.10, 3.01],[0.48, 1.47, -0.65, 2.43, 3.01]]
+]
+
+#location where the users are sitting, to be popped
+targetList = ['right',
+'left',
+'right',
+'left',
+'right'
+]
 
 gripper = {
 	# 'open':[0.0114,0.000001],
@@ -346,6 +366,57 @@ def toggleGripper():
 		moveGripper(gripper['close'])
 		rospy.sleep(2)
 
+def moveFromList():
+	import time
+
+	target = targetList.pop(0)
+	grabLocation = moveList.pop(0)
+	
+	#approach
+	# print 'MOVE TO APPROACH'
+	rospy.loginfo('MOVE TO APPROACH')
+	moveArm(grabLocation[0])
+	# rospy.sleep(3.)
+	time.sleep(3)
+
+	#touch
+	# print "MOVE TO GRAB"
+	rospy.loginfo('MOVE TO GRAB')
+	moveArm(grabLocation[1])
+	# rospy.sleep(1.0)
+	time.sleep(3)
+
+	#grab
+	moveGripper(gripper['close'])
+	# rospy.sleep(5.)
+	time.sleep(3)
+
+	#approach
+	moveArm(grabLocation[0])
+	# rospy.sleep(3.)
+	time.sleep(3)
+
+	#retract
+	safeHome(configurations['safe'])
+	# rospy.sleep(3.)
+	time.sleep(3)
+
+	#swivel to target
+	moveArm(configurations[target])
+	# rospy.sleep(3.)
+	time.sleep(3)
+
+	#drop
+	moveGripper(gripper['open'])
+	# rospy.sleep(3.)
+	time.sleep(3)
+
+	#go home, you're drunk
+	safeHome(configurations['safe'])
+	# rospy.sleep(3.)
+	time.sleep(3)
+
+
 def execute():
 	'''Tries to execute the command to the robot'''
 	if enableBot:
@@ -383,6 +454,8 @@ def execute():
 				giveHumanBad()
 			elif v1.get() == 'toggleGripper':
 				toggleGripper()
+			elif v1.get() == 'moveFromList':
+				moveFromList()
 			else:
 				print 'not yet enabled'
 		else:
@@ -415,7 +488,7 @@ frameBotRight.grid(row=2,column=0)
 ############## BUILD INTO TOP RIGHT FRAME ##############
 #######################################################
 v0 = StringVar(frameTopRight)
-v0.set("Select Solver") # default value
+v0.set("predefined task") # default value
 Label(frameTopRight,text="BOT SETUP",font="Helvetica 16 bold").grid(row=0, column=0, sticky=W+E+N+S, columnspan=2,rowspan=1)
 Label(frameTopRight,text="Solver:").grid(row=3, column=0, sticky=W+E+N+S)
 b0 = Button(frameTopRight, text="CLICK TO ENABLE BOT", command = enableToggle, width=widthRight)
@@ -428,11 +501,11 @@ w0.grid(row=4,column=1)
 ############## BUILD INTO MID RIGHT FRAME ##############
 #######################################################
 v1 = StringVar(frameTopRight)
-v1.set("waveHello") # default value
+v1.set("moveFromList") # default value
 b2 = Button(frameTopRight, text="SCAN DISABLED", command=enableScan,width=widthRight)
 b2.grid(row=3,column=0, columnspan=2,rowspan=1)
 Label(frameTopRight, text="Predefined task: ").grid(row=5,column=0)
-w1 = OptionMenu(frameTopRight, v1, taskOptions[0],taskOptions[1],taskOptions[2],taskOptions[3],taskOptions[4],taskOptions[5],taskOptions[6],taskOptions[7],taskOptions[8],taskOptions[10]).grid(row=5,column=1)
+w1 = OptionMenu(frameTopRight, v1, taskOptions[0],taskOptions[1],taskOptions[2],taskOptions[3],taskOptions[4],taskOptions[5],taskOptions[6],taskOptions[7],taskOptions[8],taskOptions[10],taskOptions[11]).grid(row=5,column=1)
 
 ############## BUILD INTO BOT RIGHT FRAME ##############
 #######################################################

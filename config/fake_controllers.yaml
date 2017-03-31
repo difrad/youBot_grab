@@ -1,10 +1,8 @@
 controller_list:
-  - name: fake_youbot_arm_controller
-    joints:
-      - arm_joint_2
-      - arm_joint_3
-      - arm_joint_4
-  - name: fake_base_controller
+  - name: fake_arm_controller
     joints:
       - arm_joint_1
       - arm_joint_2
+      - arm_joint_3
+      - arm_joint_4
+      - arm_joint_5
