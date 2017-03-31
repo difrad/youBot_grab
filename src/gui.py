@@ -36,27 +36,55 @@ configurations = {
 	'hopperPoint3':[0.0224, 1.365, -0.693585, 1.7, 2.948],
 	'hopperPoint4':[0.0224, 1.365, -0.693585, 1.295, 2.948],
 	'safe':[0.02+3.14,0.02,-0.02,0.03,0.12],
-	'stackGood':[0.02,0.29,-3.06,0.03,3.47]
-}
+	'stackGood':[0.02,0.29,-3.06,0.03,3.47]}
 
+
+grabAngles = [0.48, 0.89, 1.2, 1.6]
 #location where the blocks are sitting
 moveList = [
-[[0.48, 1.47, -1.12, 2.54, 3.01],[0.48, 1.47, -1.12, 2.87, 3.01]],
-
-[[0.48, 1.47, -1.03, 2.51, 3.01],[0.48, 1.47, -1.03, 2.84, 3.01]],
-
-[[0.48, 1.47, -0.92, 2.38, 3.01],[0.48, 1.47, -0.92, 2.71, 3.01]],
-
-[[0.48, 1.47, -0.81, 2.35, 3.01],[0.48, 1.47, -0.81, 2.68, 3.01]],
-[[0.48, 1.47, -0.65, 2.10, 3.01],[0.48, 1.47, -0.65, 2.43, 3.01]]
+[[grabAngles[0], 1.47, -1.12, 2.54, 3.01],[grabAngles[0], 1.47, -1.12, 2.87, 3.01]],
+[[grabAngles[1], 1.47, -1.12, 2.54, 3.01],[grabAngles[1], 1.47, -1.12, 2.87, 3.01]],
+[[grabAngles[2], 1.47, -1.12, 2.54, 3.01],[grabAngles[2], 1.47, -1.12, 2.87, 3.01]],
+[[grabAngles[3], 1.47, -1.12, 2.54, 3.01],[grabAngles[3], 1.47, -1.12, 2.87, 3.01]],
+[[grabAngles[0], 1.47, -1.03, 2.51, 3.01],[grabAngles[0], 1.47, -1.03, 2.84, 3.01]],
+[[grabAngles[1], 1.47, -1.03, 2.51, 3.01],[grabAngles[1], 1.47, -1.03, 2.84, 3.01]],
+[[grabAngles[2], 1.47, -1.03, 2.51, 3.01],[grabAngles[2], 1.47, -1.03, 2.84, 3.01]],
+[[grabAngles[3], 1.47, -1.03, 2.51, 3.01],[grabAngles[3], 1.47, -1.03, 2.84, 3.01]],
+[[grabAngles[0], 1.47, -0.92, 2.38, 3.01],[grabAngles[0], 1.47, -0.92, 2.71, 3.01]],
+[[grabAngles[1], 1.47, -0.92, 2.38, 3.01],[grabAngles[1], 1.47, -0.92, 2.71, 3.01]],
+[[grabAngles[2], 1.47, -0.92, 2.38, 3.01],[grabAngles[2], 1.47, -0.92, 2.71, 3.01]],
+[[grabAngles[3], 1.47, -0.92, 2.38, 3.01],[grabAngles[3], 1.47, -0.92, 2.71, 3.01]],
+[[grabAngles[0], 1.47, -0.81, 2.35, 3.01],[grabAngles[0], 1.47, -0.81, 2.68, 3.01]],
+[[grabAngles[1], 1.47, -0.81, 2.35, 3.01],[grabAngles[1], 1.47, -0.81, 2.68, 3.01]],
+[[grabAngles[2], 1.47, -0.81, 2.35, 3.01],[grabAngles[2], 1.47, -0.81, 2.68, 3.01]],
+[[grabAngles[3], 1.47, -0.81, 2.35, 3.01],[grabAngles[3], 1.47, -0.81, 2.68, 3.01]],
+[[grabAngles[0], 1.47, -0.65, 2.10, 3.01],[grabAngles[0], 1.47, -0.65, 2.43, 3.01]],
+[[grabAngles[1], 1.47, -0.65, 2.10, 3.01],[grabAngles[1], 1.47, -0.65, 2.43, 3.01]],
+[[grabAngles[2], 1.47, -0.65, 2.10, 3.01],[grabAngles[2], 1.47, -0.65, 2.43, 3.01]],
+[[grabAngles[3], 1.47, -0.65, 2.10, 3.01],[grabAngles[3], 1.47, -0.65, 2.43, 3.01]]
 ]
 
-#location where the users are sitting, to be popped
+#location where the users are sitting, to be popped.  Note: no error checking is done to see if targetList and moveList are of same size
 targetList = ['right',
 'left',
 'right',
 'left',
-'right'
+'right',
+'right',
+'right',
+'left',
+'right',
+'left',
+'right',
+'right',
+'right',
+'left',
+'right',
+'left',
+'right',
+'right',
+'right',
+'left'
 ]
 
 gripper = {
@@ -274,6 +302,7 @@ def grabBlock():
 	safeHome(configurations['safe'])
 	# rospy.sleep(5)
 
+
 def scanLeft():
 	'''pretends to scan the structure with a 3D camera by moving to a few random configurations.'''
 
@@ -365,6 +394,56 @@ def toggleGripper():
 		rospy.sleep(2)
 		moveGripper(gripper['close'])
 		rospy.sleep(2)
+
+def moveFromButtonPress(data):
+	import time
+
+	target = targetList[data]
+	grabLocation = moveList[data]
+	#approach
+	# print 'MOVE TO APPROACH'
+	rospy.loginfo('MOVE TO APPROACH')
+	moveArm(grabLocation[0])
+	# rospy.sleep(3.)
+	time.sleep(3)
+
+	#touch
+	# print "MOVE TO GRAB"
+	rospy.loginfo('MOVE TO GRAB')
+	moveArm(grabLocation[1])
+	# rospy.sleep(1.0)
+	time.sleep(3)
+
+	#grab
+	moveGripper(gripper['close'])
+	# rospy.sleep(5.)
+	time.sleep(3)
+
+	#approach
+	moveArm(grabLocation[0])
+	# rospy.sleep(3.)
+	time.sleep(3)
+
+	#retract
+	safeHome(configurations['safe'])
+	# rospy.sleep(3.)
+	time.sleep(3)
+
+	#swivel to target
+	moveArm(configurations[target])
+	# rospy.sleep(3.)
+	time.sleep(3)
+
+	#drop
+	moveGripper(gripper['open'])
+	# rospy.sleep(3.)
+	time.sleep(3)
+
+	#go home, you're drunk
+	safeHome(configurations['safe'])
+	# rospy.sleep(3.)
+	time.sleep(3)
+
 
 def moveFromList():
 	import time
@@ -546,25 +625,65 @@ Label(frameTopLeft,text="m6_grip_r").grid(row=7,column=0)
 
 ############## BUILD INTO BOT LEFT FRAME ##############
 ########################################################
-Label(frameBotLeft,text="END EFFECTOR CONFIG",font="Helvetica 16 bold").grid(row=0, column=0, columnspan=2,rowspan=1,sticky=W+E+N+S)
+Label(frameBotLeft,text="BLOCK GRAB PLACEMENT",font="Helvetica 16 bold").grid(row=0, column=0, columnspan=4,rowspan=1,sticky=W+E+N+S)
+b4 = Button(frameBotLeft, text="BLOCK 0", command=lambda: moveFromButtonPress(0),width=widthRight)
+b5 = Button(frameBotLeft, text="BLOCK 1", command=lambda: moveFromButtonPress(1),width=widthRight)
+b6 = Button(frameBotLeft, text="BLOCK 2", command=lambda: moveFromButtonPress(2),width=widthRight)
+b7 = Button(frameBotLeft, text="BLOCK 3", command=lambda: moveFromButtonPress(3),width=widthRight)
+b8 = Button(frameBotLeft, text="BLOCK 4", command=lambda: moveFromButtonPress(4),width=widthRight)
+b9 = Button(frameBotLeft, text="BLOCK 5", command=lambda: moveFromButtonPress(5),width=widthRight)
+b10 = Button(frameBotLeft, text="BLOCK 6", command=lambda: moveFromButtonPress(6),width=widthRight)
+b11 = Button(frameBotLeft, text="BLOCK 7", command=lambda: moveFromButtonPress(7),width=widthRight)
+b12 = Button(frameBotLeft, text="BLOCK 8", command=lambda: moveFromButtonPress(8),width=widthRight)
+b13 = Button(frameBotLeft, text="BLOCK 9", command=lambda: moveFromButtonPress(9),width=widthRight)
+b14 = Button(frameBotLeft, text="BLOCK 10", command=lambda: moveFromButtonPress(10),width=widthRight)
+b15 = Button(frameBotLeft, text="BLOCK 11", command=lambda: moveFromButtonPress(11),width=widthRight)
+b16 = Button(frameBotLeft, text="BLOCK 12", command=lambda: moveFromButtonPress(12),width=widthRight)
+b17 = Button(frameBotLeft, text="BLOCK 13", command=lambda: moveFromButtonPress(13),width=widthRight)
+b18 = Button(frameBotLeft, text="BLOCK 14", command=lambda: moveFromButtonPress(14),width=widthRight)
+b19 = Button(frameBotLeft, text="BLOCK 15", command=lambda: moveFromButtonPress(15),width=widthRight)
+b20 = Button(frameBotLeft, text="BLOCK 16", command=lambda: moveFromButtonPress(16),width=widthRight)
+b21 = Button(frameBotLeft, text="BLOCK 17", command=lambda: moveFromButtonPress(17),width=widthRight)
+b22 = Button(frameBotLeft, text="BLOCK 18", command=lambda: moveFromButtonPress(18),width=widthRight)
+b23 = Button(frameBotLeft, text="BLOCK 19", command=lambda: moveFromButtonPress(19),width=widthRight)
+b4.grid(row=1,column=0, columnspan=1,rowspan=1)
+b5.grid(row=1,column=1, columnspan=1,rowspan=1)
+b6.grid(row=1,column=2, columnspan=1,rowspan=1)
+b7.grid(row=1,column=3, columnspan=1,rowspan=1)
+b8.grid(row=2,column=0, columnspan=1,rowspan=1)
+b9.grid(row=2,column=1, columnspan=1,rowspan=1)
+b10.grid(row=2,column=2, columnspan=1,rowspan=1)
+b11.grid(row=2,column=3, columnspan=1,rowspan=1)
+b12.grid(row=3,column=0, columnspan=1,rowspan=1)
+b13.grid(row=3,column=1, columnspan=1,rowspan=1)
+b14.grid(row=3,column=2, columnspan=1,rowspan=1)
+b15.grid(row=3,column=3, columnspan=1,rowspan=1)
+b16.grid(row=4,column=0, columnspan=1,rowspan=1)
+b17.grid(row=4,column=1, columnspan=1,rowspan=1)
+b18.grid(row=4,column=2, columnspan=1,rowspan=1)
+b19.grid(row=4,column=3, columnspan=1,rowspan=1)
+b20.grid(row=5,column=0, columnspan=1,rowspan=1)
+b21.grid(row=5,column=1, columnspan=1,rowspan=1)
+b22.grid(row=5,column=2, columnspan=1,rowspan=1)
+b23.grid(row=5,column=3, columnspan=1,rowspan=1)
 
-e0 = Entry(frameBotLeft, width=10).grid(row=1,column=1)
-e1 = Entry(frameBotLeft, width=10).grid(row=2,column=1)
-e2 = Entry(frameBotLeft, width=10).grid(row=3,column=1)
-e3 = Entry(frameBotLeft, width=10).grid(row=4,column=1)
-e4 = Entry(frameBotLeft, width=10).grid(row=5,column=1)
-e5 = Entry(frameBotLeft, width=10).grid(row=6,column=1)
-e6 = Entry(frameBotLeft, width=10).grid(row=7,column=1)
-e7 = Entry(frameBotLeft, width=10).grid(row=8,column=1)
+# e0 = Entry(frameBotLeft, width=10).grid(row=1,column=1)
+# e1 = Entry(frameBotLeft, width=10).grid(row=2,column=1)
+# e2 = Entry(frameBotLeft, width=10).grid(row=3,column=1)
+# e3 = Entry(frameBotLeft, width=10).grid(row=4,column=1)
+# e4 = Entry(frameBotLeft, width=10).grid(row=5,column=1)
+# e5 = Entry(frameBotLeft, width=10).grid(row=6,column=1)
+# e6 = Entry(frameBotLeft, width=10).grid(row=7,column=1)
+# e7 = Entry(frameBotLeft, width=10).grid(row=8,column=1)
 
-Label(frameBotLeft,text="x").grid(row=1,column=0)
-Label(frameBotLeft,text="y").grid(row=2,column=0)
-Label(frameBotLeft,text="z").grid(row=3,column=0)
-Label(frameBotLeft,text="roll").grid(row=4,column=0)
-Label(frameBotLeft,text="pitch").grid(row=5,column=0)
-Label(frameBotLeft,text="yaw").grid(row=6,column=0)
-Label(frameBotLeft,text="grip_l").grid(row=7,column=0)
-Label(frameBotLeft,text="grip_r").grid(row=8,column=0)
+# Label(frameBotLeft,text="x").grid(row=1,column=0)
+# Label(frameBotLeft,text="y").grid(row=2,column=0)
+# Label(frameBotLeft,text="z").grid(row=3,column=0)
+# Label(frameBotLeft,text="roll").grid(row=4,column=0)
+# Label(frameBotLeft,text="pitch").grid(row=5,column=0)
+# Label(frameBotLeft,text="yaw").grid(row=6,column=0)
+# Label(frameBotLeft,text="grip_l").grid(row=7,column=0)
+# Label(frameBotLeft,text="grip_r").grid(row=8,column=0)
 
 #create the publishers
 armPublisher = rospy.Publisher('moveArm', Float32MultiArray, queue_size=20)
