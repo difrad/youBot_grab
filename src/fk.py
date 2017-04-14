@@ -241,21 +241,21 @@ def safeHomeCommand(data):
     msg.positions = jvaluelist
     pubArm.publish(msg)
     
-    rospy.sleep(2)
-  
-    #creating a JointValue() List/Array
-    jvaluelist = [0 for i in range(1)]    
+    #swivel the base to home location
+    # rospy.sleep(2)
+    # #creating a JointValue() List/Array
+    # jvaluelist = [0 for i in range(1)]    
 
-    #creating a JointValue() Object for joint 1 (base)
-    jvalue1 = JointValue()
-    jvalue1.joint_uri = 'arm_joint_1'
-    jvalue1.unit = 'rad'
-    jvalue1.value = data.data[0]
-    jvaluelist[0] = jvalue1  
+    # #creating a JointValue() Object for joint 1 (base)
+    # jvalue1 = JointValue()
+    # jvalue1.joint_uri = 'arm_joint_1'
+    # jvalue1.unit = 'rad'
+    # jvalue1.value = data.data[0]
+    # jvaluelist[0] = jvalue1  
 
-    msg = JointPositions()
-    msg.positions = jvaluelist
-    pubArm.publish(msg)
+    # msg = JointPositions()
+    # msg.positions = jvaluelist
+    # pubArm.publish(msg)
 
 
 def listener():

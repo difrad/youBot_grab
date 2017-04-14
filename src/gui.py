@@ -23,8 +23,8 @@ taskOptions = ["dropRight","dropLeft","grabBlock","scanLeft","scanRight",'waveHe
 
 #hardcode position configurations, from base to end effector
 configurations = {
-	'left':[3.14-1.24,1.77,-1.30,2.23,2.88],
-	'right':[3.14+1.24,1.77,-1.30,2.23,2.88],
+	'left':[3.14-0.5,1.23,-0.83,2.52,3.08],
+	'right':[3.14+0.5,1.23,-0.83,2.52,3.08],
 	'middleGood':[3.14,0.98,-0.92,3.01,2.88],
 	'middleRight':[3.14-.5,0.98,-0.92,3.01,2.88],
 	'middleLeft':[3.14+.5,0.98,-0.92,3.01,2.88],
@@ -35,33 +35,53 @@ configurations = {
 	'hopperPoint2':[0.0224, 1.132, -0.407, 1.25, 2.948],
 	'hopperPoint3':[0.0224, 1.365, -0.693585, 1.7, 2.948],
 	'hopperPoint4':[0.0224, 1.365, -0.693585, 1.295, 2.948],
-	'safe':[0.02+3.14,0.02,-0.02,0.03,0.12],
+	'safe':[0.02+3.14,0.02,-0.02,0.03,3.08],
 	'stackGood':[0.02,0.29,-3.06,0.03,3.47]}
 
 
-grabAngles = [0.48, 0.89, 1.2, 1.6]
+grabAngles = [0.48+3.14, 0.89+3.14, 1.2+3.14, 1.6+3.14]
 #location where the blocks are sitting
 moveList = [
-[[grabAngles[0], 1.47, -1.12, 2.54, 3.01],[grabAngles[0], 1.47, -1.12, 2.87, 3.01]],
-[[grabAngles[1], 1.47, -1.12, 2.54, 3.01],[grabAngles[1], 1.47, -1.12, 2.87, 3.01]],
-[[grabAngles[2], 1.47, -1.12, 2.54, 3.01],[grabAngles[2], 1.47, -1.12, 2.87, 3.01]],
-[[grabAngles[3], 1.47, -1.12, 2.54, 3.01],[grabAngles[3], 1.47, -1.12, 2.87, 3.01]],
-[[grabAngles[0], 1.47, -1.03, 2.51, 3.01],[grabAngles[0], 1.47, -1.03, 2.84, 3.01]],
-[[grabAngles[1], 1.47, -1.03, 2.51, 3.01],[grabAngles[1], 1.47, -1.03, 2.84, 3.01]],
-[[grabAngles[2], 1.47, -1.03, 2.51, 3.01],[grabAngles[2], 1.47, -1.03, 2.84, 3.01]],
-[[grabAngles[3], 1.47, -1.03, 2.51, 3.01],[grabAngles[3], 1.47, -1.03, 2.84, 3.01]],
-[[grabAngles[0], 1.47, -0.92, 2.38, 3.01],[grabAngles[0], 1.47, -0.92, 2.71, 3.01]],
-[[grabAngles[1], 1.47, -0.92, 2.38, 3.01],[grabAngles[1], 1.47, -0.92, 2.71, 3.01]],
-[[grabAngles[2], 1.47, -0.92, 2.38, 3.01],[grabAngles[2], 1.47, -0.92, 2.71, 3.01]],
-[[grabAngles[3], 1.47, -0.92, 2.38, 3.01],[grabAngles[3], 1.47, -0.92, 2.71, 3.01]],
-[[grabAngles[0], 1.47, -0.81, 2.35, 3.01],[grabAngles[0], 1.47, -0.81, 2.68, 3.01]],
-[[grabAngles[1], 1.47, -0.81, 2.35, 3.01],[grabAngles[1], 1.47, -0.81, 2.68, 3.01]],
-[[grabAngles[2], 1.47, -0.81, 2.35, 3.01],[grabAngles[2], 1.47, -0.81, 2.68, 3.01]],
-[[grabAngles[3], 1.47, -0.81, 2.35, 3.01],[grabAngles[3], 1.47, -0.81, 2.68, 3.01]],
-[[grabAngles[0], 1.47, -0.65, 2.10, 3.01],[grabAngles[0], 1.47, -0.65, 2.43, 3.01]],
-[[grabAngles[1], 1.47, -0.65, 2.10, 3.01],[grabAngles[1], 1.47, -0.65, 2.43, 3.01]],
-[[grabAngles[2], 1.47, -0.65, 2.10, 3.01],[grabAngles[2], 1.47, -0.65, 2.43, 3.01]],
-[[grabAngles[3], 1.47, -0.65, 2.10, 3.01],[grabAngles[3], 1.47, -0.65, 2.43, 3.01]]
+# [[grabAngles[0], 1.47, -1.12, 2.54, 3.01],[grabAngles[0], 1.47, -1.12, 2.87, 3.01]],
+# [[grabAngles[1], 1.47, -1.12, 2.54, 3.01],[grabAngles[1], 1.47, -1.12, 2.87, 3.01]],
+# [[grabAngles[2], 1.47, -1.12, 2.54, 3.01],[grabAngles[2], 1.47, -1.12, 2.87, 3.01]],
+# [[grabAngles[3], 1.47, -1.12, 2.54, 3.01],[grabAngles[3], 1.47, -1.12, 2.87, 3.01]],
+# [[grabAngles[0], 1.47, -1.03, 2.51, 3.01],[grabAngles[0], 1.47, -1.03, 2.84, 3.01]],
+# [[grabAngles[1], 1.47, -1.03, 2.51, 3.01],[grabAngles[1], 1.47, -1.03, 2.84, 3.01]],
+# [[grabAngles[2], 1.47, -1.03, 2.51, 3.01],[grabAngles[2], 1.47, -1.03, 2.84, 3.01]],
+# [[grabAngles[3], 1.47, -1.03, 2.51, 3.01],[grabAngles[3], 1.47, -1.03, 2.84, 3.01]],
+# [[grabAngles[0], 1.47, -0.92, 2.38, 3.01],[grabAngles[0], 1.47, -0.92, 2.71, 3.01]],
+# [[grabAngles[1], 1.47, -0.92, 2.38, 3.01],[grabAngles[1], 1.47, -0.92, 2.71, 3.01]],
+# [[grabAngles[2], 1.47, -0.92, 2.38, 3.01],[grabAngles[2], 1.47, -0.92, 2.71, 3.01]],
+# [[grabAngles[3], 1.47, -0.92, 2.38, 3.01],[grabAngles[3], 1.47, -0.92, 2.71, 3.01]],
+# [[grabAngles[0], 1.47, -0.81, 2.35, 3.01],[grabAngles[0], 1.47, -0.81, 2.68, 3.01]],
+# [[grabAngles[1], 1.47, -0.81, 2.35, 3.01],[grabAngles[1], 1.47, -0.81, 2.68, 3.01]],
+# [[grabAngles[2], 1.47, -0.81, 2.35, 3.01],[grabAngles[2], 1.47, -0.81, 2.68, 3.01]],
+# [[grabAngles[3], 1.47, -0.81, 2.35, 3.01],[grabAngles[3], 1.47, -0.81, 2.68, 3.01]],
+# [[grabAngles[0], 1.47, -0.65, 2.10, 3.01],[grabAngles[0], 1.47, -0.65, 2.43, 3.01]],
+# [[grabAngles[1], 1.47, -0.65, 2.10, 3.01],[grabAngles[1], 1.47, -0.65, 2.43, 3.01]],
+# [[grabAngles[2], 1.47, -0.65, 2.10, 3.01],[grabAngles[2], 1.47, -0.65, 2.43, 3.01]],
+# [[grabAngles[3], 1.47, -0.65, 2.10, 3.01],[grabAngles[3], 1.47, -0.65, 2.43, 3.01]]
+[[grabAngles[0], 0.41, -3.52, 0.44, 3.02],[grabAngles[0], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[0], 0.41, -3.52, 0.44, 3.02],[grabAngles[0], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[0], 0.41, -3.52, 0.44, 3.02],[grabAngles[0], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[0], 0.41, -3.52, 0.44, 3.02],[grabAngles[0], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[0], 0.41, -3.52, 0.44, 3.02],[grabAngles[0], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[1], 0.41, -3.52, 0.44, 3.02],[grabAngles[1], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[1], 0.41, -3.52, 0.44, 3.02],[grabAngles[1], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[1], 0.41, -3.52, 0.44, 3.02],[grabAngles[1], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[1], 0.41, -3.52, 0.44, 3.02],[grabAngles[1], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[1], 0.41, -3.52, 0.44, 3.02],[grabAngles[1], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[2], 0.41, -3.52, 0.44, 3.02],[grabAngles[2], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[2], 0.41, -3.52, 0.44, 3.02],[grabAngles[2], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[2], 0.41, -3.52, 0.44, 3.02],[grabAngles[2], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[2], 0.41, -3.52, 0.44, 3.02],[grabAngles[2], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[2], 0.41, -3.52, 0.44, 3.02],[grabAngles[2], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[3], 0.41, -3.52, 0.44, 3.02],[grabAngles[3], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[3], 0.41, -3.52, 0.44, 3.02],[grabAngles[3], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[3], 0.41, -3.52, 0.44, 3.02],[grabAngles[3], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[3], 0.41, -3.52, 0.44, 3.02],[grabAngles[3], 0.41,-3.72, 0.64, 3.02]],
+[[grabAngles[3], 0.41, -3.52, 0.44, 3.02],[grabAngles[3], 0.41,-3.72, 0.64, 3.02]]
 ]
 
 #location where the users are sitting, to be popped.  Note: no error checking is done to see if targetList and moveList are of same size
@@ -404,45 +424,51 @@ def moveFromButtonPress(data):
 	# print 'MOVE TO APPROACH'
 	rospy.loginfo('MOVE TO APPROACH')
 	moveArm(grabLocation[0])
-	# rospy.sleep(3.)
-	time.sleep(3)
+	rospy.sleep(3.)
+	# time.sleep(3)
 
 	#touch
 	# print "MOVE TO GRAB"
 	rospy.loginfo('MOVE TO GRAB')
 	moveArm(grabLocation[1])
-	# rospy.sleep(1.0)
-	time.sleep(3)
+	rospy.sleep(2.5)
+	# time.sleep(3)
 
 	#grab
+	rospy.loginfo('GRAB')
 	moveGripper(gripper['close'])
-	# rospy.sleep(5.)
-	time.sleep(3)
+	rospy.sleep(2.)
+	# time.sleep(3)
 
 	#approach
+	rospy.loginfo('MOVE TO APPROACH')
 	moveArm(grabLocation[0])
-	# rospy.sleep(3.)
-	time.sleep(3)
+	rospy.sleep(2.)
+	# time.sleep(3)
 
 	#retract
+	rospy.loginfo('MOVE TO SAFE')
 	safeHome(configurations['safe'])
-	# rospy.sleep(3.)
-	time.sleep(3)
+	rospy.sleep(1.5)
+	# time.sleep(3)
 
-	#swivel to target
+	# swivel to target
+	rospy.loginfo('MOVE TO TARGET')
 	moveArm(configurations[target])
-	# rospy.sleep(3.)
-	time.sleep(3)
+	rospy.sleep(3.)
+	# time.sleep(3)
 
-	#drop
+	# #drop
+	rospy.loginfo('RELEASE')
 	moveGripper(gripper['open'])
-	# rospy.sleep(3.)
-	time.sleep(3)
+	rospy.sleep(2.)
+	# time.sleep(3)
 
-	#go home, you're drunk
+	# #go home, you're drunk
+	rospy.loginfo('MOVE TO SAFE')
 	safeHome(configurations['safe'])
-	# rospy.sleep(3.)
-	time.sleep(3)
+	rospy.sleep(2.)
+	# time.sleep(3)
 
 
 def moveFromList():
