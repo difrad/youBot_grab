@@ -424,50 +424,50 @@ def moveFromButtonPress(data):
 	# print 'MOVE TO APPROACH'
 	rospy.loginfo('MOVE TO APPROACH')
 	moveArm(grabLocation[0])
-	rospy.sleep(3.)
+	rospy.sleep(3.5)
 	# time.sleep(3)
 
 	#touch
 	# print "MOVE TO GRAB"
 	rospy.loginfo('MOVE TO GRAB')
 	moveArm(grabLocation[1])
-	rospy.sleep(2.5)
+	rospy.sleep(3.0)
 	# time.sleep(3)
 
 	#grab
 	rospy.loginfo('GRAB')
 	moveGripper(gripper['close'])
-	rospy.sleep(2.)
+	rospy.sleep(2.5)
 	# time.sleep(3)
 
 	#approach
 	rospy.loginfo('MOVE TO APPROACH')
 	moveArm(grabLocation[0])
-	rospy.sleep(2.)
+	rospy.sleep(2.5)
 	# time.sleep(3)
 
 	#retract
 	rospy.loginfo('MOVE TO SAFE')
 	safeHome(configurations['safe'])
-	rospy.sleep(1.5)
+	rospy.sleep(2.0)
 	# time.sleep(3)
 
 	# swivel to target
 	rospy.loginfo('MOVE TO TARGET')
 	moveArm(configurations[target])
-	rospy.sleep(3.)
+	rospy.sleep(3.5)
 	# time.sleep(3)
 
 	# #drop
 	rospy.loginfo('RELEASE')
 	moveGripper(gripper['open'])
-	rospy.sleep(2.)
+	rospy.sleep(2.5)
 	# time.sleep(3)
 
 	# #go home, you're drunk
 	rospy.loginfo('MOVE TO SAFE')
 	safeHome(configurations['safe'])
-	rospy.sleep(2.)
+	rospy.sleep(2.5)
 	# time.sleep(3)
 
 

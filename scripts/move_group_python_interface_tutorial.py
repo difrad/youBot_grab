@@ -48,6 +48,8 @@ import geometry_msgs.msg
 
 from std_msgs.msg import String
 
+
+
 def move_group_python_interface_tutorial():
   ## BEGIN_TUTORIAL
   ##
@@ -113,10 +115,14 @@ def move_group_python_interface_tutorial():
   ## end-effector
   print "============ Generating plan 1"
   pose_target = geometry_msgs.msg.Pose()
+  # pose_target.orientation.w = 1.0
+  # pose_target.position.x = 0.257
+  # pose_target.position.y = 0.002
+  # pose_target.position.z = 0.445
   pose_target.orientation.w = 1.0
   pose_target.position.x = 0.257
   pose_target.position.y = 0.002
-  pose_target.position.z = 0.445
+  pose_target.position.z = 0.41
   group.set_pose_target(pose_target)
 
   ## Now, we call the planner to compute the plan
@@ -155,7 +161,7 @@ def move_group_python_interface_tutorial():
   ## and report success on execution of a trajectory.
 
   # Uncomment below line when working with a real robot
-  # group.go(wait=True)
+  group.go(wait=True)
 
   ## Planning to a joint-space goal 
   ## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -171,7 +177,11 @@ def move_group_python_interface_tutorial():
 
   ## Now, let's modify one of the joints, plan to the new joint
   ## space goal and visualize the plan
-  group_variable_values[0] = 1.0
+  # group_variable_values[0] = 1.0
+  group_variable_values[0] = 1.93
+  group_variable_values[1] = 1.96
+  group_variable_values[2] = -1.60
+  group_variable_values[3] = 3.08
   group.set_joint_value_target(group_variable_values)
 
   plan2 = group.plan()
@@ -179,6 +189,29 @@ def move_group_python_interface_tutorial():
   print "============ Waiting while RVIZ displays plan2..."
   rospy.sleep(5)
 
+  ##
+  ## Let's set a joint space goal and move towards it. 
+  ## First, we will clear the pose target we had just set.
+
+  # group.clear_pose_targets()
+
+  ## Then, we will get the current set of joint values for the group
+  group_variable_values = group.get_current_joint_values()
+  print "============ Joint values: ", group_variable_values
+
+  ## Now, let's modify one of the joints, plan to the new joint
+  ## space goal and visualize the plan
+  # group_variable_values[0] = 1.0
+  group_variable_values[0] = 1.93
+  group_variable_values[1] = 1.70
+  group_variable_values[2] = -1.45
+  group_variable_values[3] = 3.29
+  group.set_joint_value_target(group_variable_values)
+
+  plan2 = group.plan()
+
+  print "============ Waiting while RVIZ displays plan2 POINT 1..."
+  rospy.sleep(5)
 
   ## Cartesian Paths
   ## ^^^^^^^^^^^^^^^
