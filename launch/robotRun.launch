@@ -25,7 +25,7 @@
 </include>
 
 <!-- launch rviz -->
-<node pkg="rviz" type="rviz" name="rviz" />
+<!-- <node pkg="rviz" type="rviz" name="rviz" /> -->
 
 <!-- urdf information -->
 <param name="robot_description" command="cat $(find youbot_moveit_config)/youbot.urdf" />

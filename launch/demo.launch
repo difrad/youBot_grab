@@ -7,6 +7,14 @@
 <!-- By default, we are not in debug mode -->
 <arg name="debug" default="false" />
 
+<!-- test -->
+<!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
+<include file="$(find youbot_moveit_config)/launch/planning_context.launch">
+  <arg name="load_robot_description" value="true"/>
+</include>
+<!-- /test -->
+
+
   <!-- We do not have a robot connected, so publish fake joint states -->
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
     <param name="/use_gui" value="false"/>
@@ -17,6 +25,11 @@
   <arg name="load_robot_description" value="true"/>
 </include>
 
+
+<!-- test -->
+<include file="$(find youbot_moveit_config)/launch/youbot_moveit_controller_manager.launch.xml">
+</include>
+<!-- /test -->
 
 
   <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->

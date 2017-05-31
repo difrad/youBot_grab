@@ -23,7 +23,7 @@
   <!-- Planning Functionality -->
   <include ns="move_group" file="$(find youbot_moveit_config)/launch/planning_pipeline.launch.xml">
     <arg name="pipeline" value="ompl" />
-  </include>
+  </include>t
 
   <!-- Trajectory Execution Functionality -->
   <include ns="move_group" file="$(find youbot_moveit_config)/launch/trajectory_execution.launch.xml" if="$(arg allow_trajectory_execution)">

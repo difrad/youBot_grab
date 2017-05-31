@@ -1,5 +1,7 @@
 controller_list:
   - name: youBot_arm1_controller
+    action_ns: follow_joint_trajectory
+    default: true
     joints:
       - arm_joint_1
       - arm_joint_2
